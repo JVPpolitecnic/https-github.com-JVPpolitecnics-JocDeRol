@@ -37,7 +37,7 @@ public class Main {
         buttonEnterGame = new JButton();
         buttonEnterGame.setText("Enter game");
         buttonEnterGame.setLayout(null);
-        buttonEnterGame.setSize(new Dimension(100,35));
+        buttonEnterGame.setSize(new Dimension(100, 35));
 
 
         // panels
@@ -53,22 +53,22 @@ public class Main {
         panelFirst.add(buttonEnterGame);
         panelFirst.add(floorTile);
         panelFirst.setFocusable(true);
-        buttonEnterGame.setLocation(panelFirst.getWidth()/2-60, panelFirst.getWidth()/2);
+        buttonEnterGame.setLocation(panelFirst.getWidth() / 2 - 60, panelFirst.getWidth() / 2);
         floorTileArray = new JLabel[37];
-        for (int i = 0; i < floorTileArray.length ; i++) {
-            floorTileArray[i]= floorTile;
+        for (int i = 0; i < floorTileArray.length; i++) {
+            floorTileArray[i] = floorTile;
         }
 
         //place tiles
         int x = 0;
         int y = 0;
-        for (int i = 0; i <panelFirst.getWidth() ; i+=32) {
+        for (int i = 0; i < panelFirst.getWidth(); i += 32) {
 
-            for (int j = 0; j <panelFirst.getHeight() ; j+=32) {
+            for (int j = 0; j < panelFirst.getHeight(); j += 32) {
                 floorTile = new JLabel();
                 floorTile.setSize(dimen);
                 floorTile.setIcon(icon_floor);
-                floorTile.setLocation(i,j);
+                floorTile.setLocation(i, j);
                 panelFirst.add(floorTile);
             }
         }
@@ -80,7 +80,7 @@ public class Main {
         panelTop = new JPanel();
         panelTop.setSize(new Dimension(700, 50));
         panelTop.setBackground(Color.BLUE);
-        //panelMain.add(panelTop);
+
 
         //Visuals
 
@@ -115,7 +115,7 @@ public class Main {
         panelTop.add(heart3);
 
         selectChar = new JLabel();
-        selectChar.setLocation(panelFirst.getWidth()/2 -65, panelFirst.getHeight()/2 -80);
+        selectChar.setLocation(panelFirst.getWidth() / 2 - 65, panelFirst.getHeight() / 2 - 80);
         characterOption = 0;
         chooseChar(characterOption);
         topText();
@@ -138,16 +138,16 @@ public class Main {
 
             if (key == KeyEvent.VK_LEFT) {
 
-             if (characterOption != 0){
-                 characterOption = characterOption - 1;
-             }
+                if (characterOption != 0) {
+                    characterOption = characterOption - 1;
+                }
                 System.out.println(characterOption);
                 chooseChar(characterOption);
 
             }
 
             if (key == KeyEvent.VK_RIGHT) {
-                if (characterOption !=2) {
+                if (characterOption != 2) {
                     characterOption = characterOption + 1;
                 }
                 System.out.println(characterOption);
@@ -155,27 +155,30 @@ public class Main {
 
             }
             if (key == KeyEvent.VK_ENTER) {
-
+                panelFirst.setVisible(false);
+                panelMain.add(panelTop);
 
             }
         }
     }
-public void topText(){
-   title = new JLabel();
-   title.setText("Dungeon Game");
-   title.setSize(new Dimension(300,150));
-    ImageIcon image_title = new ImageIcon("src/img/dungeon/title.png");
-    Icon icon_title = new ImageIcon(image_title.getImage().getScaledInstance(title.getWidth(), title.getHeight(), Image.SCALE_DEFAULT));
-    title.setIcon(icon_title);
-   title.setForeground(Color.WHITE);
-   title.setLocation(panelFirst.getWidth()/2 - 155, panelFirst.getHeight()/2 - 220);
-   panelFirst.add(title, 0);
 
-}
+    public void topText() {
+        title = new JLabel();
+        title.setText("Dungeon Game");
+        title.setSize(new Dimension(300, 150));
+        ImageIcon image_title = new ImageIcon("src/img/dungeon/title.png");
+        Icon icon_title = new ImageIcon(image_title.getImage().getScaledInstance(title.getWidth(), title.getHeight(), Image.SCALE_DEFAULT));
+        title.setIcon(icon_title);
+        title.setForeground(Color.WHITE);
+        title.setLocation(panelFirst.getWidth() / 2 - 155, panelFirst.getHeight() / 2 - 220);
+        panelFirst.add(title, 0);
+
+    }
+
     public void chooseChar(int for_Character_option) {
 
 
-        selectChar.setSize(new Dimension(100,100));
+        selectChar.setSize(new Dimension(100, 100));
         ImageIcon imageWizard = new ImageIcon("src/img/wizard/wizard_down.gif");
         Icon icon_wizard = new ImageIcon(imageWizard.getImage().getScaledInstance(selectChar.getWidth(), selectChar.getHeight(), Image.SCALE_DEFAULT));
 
@@ -187,16 +190,15 @@ public void topText(){
 
         if (for_Character_option == 1) {
             selectChar.setIcon(icon_wizard);
-           panelFirst.add(selectChar, 0);
-       } else if (for_Character_option <= 0) {
+            panelFirst.add(selectChar, 0);
+        } else if (for_Character_option <= 0) {
             selectChar.setIcon(icon_warrior);
             panelFirst.add(selectChar, 0);
-       } else if (for_Character_option >= 2) {
+        } else if (for_Character_option >= 2) {
             selectChar.setIcon(icon_priest);
             panelFirst.add(selectChar, 0);
 
         }
-
 
 
     }
