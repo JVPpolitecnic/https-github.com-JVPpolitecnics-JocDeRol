@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class Main {
@@ -20,6 +21,8 @@ public class Main {
     public int characterOption;
 
     public JLabel[] floorTileArray;
+
+    public JLabel title;
 
     public Main() {
 
@@ -72,6 +75,7 @@ public class Main {
 
 
         panelMain.add(panelFirst);
+        panelMain.addKeyListener(new panelMainListener());
 
         panelTop = new JPanel();
         panelTop.setSize(new Dimension(700, 50));
@@ -111,9 +115,10 @@ public class Main {
         panelTop.add(heart3);
 
         selectChar = new JLabel();
-        selectChar.setLocation(panelFirst.getWidth()/2, panelFirst.getHeight()/2);
+        selectChar.setLocation(panelFirst.getWidth()/2 -65, panelFirst.getHeight()/2 -80);
         characterOption = 0;
         chooseChar(characterOption);
+        topText();
     }
 
     public static void main(String[] args) {
@@ -125,23 +130,48 @@ public class Main {
         frame.setLayout(null);
         frame.setLocation(300, 200);
     }
-    public void keyPressed(KeyEvent e) {
 
-        int key = e.getKeyCode();
+    private class panelMainListener extends KeyAdapter {
+        public void keyPressed(KeyEvent e) {
 
-        if (key == KeyEvent.VK_LEFT) {
-            characterOption = characterOption -1;
-            chooseChar(characterOption);
+            int key = e.getKeyCode();
+
+            if (key == KeyEvent.VK_LEFT) {
+
+             if (characterOption != 0){
+                 characterOption = characterOption - 1;
+             }
+                System.out.println(characterOption);
+                chooseChar(characterOption);
+
+            }
+
+            if (key == KeyEvent.VK_RIGHT) {
+                if (characterOption !=2) {
+                    characterOption = characterOption + 1;
+                }
+                System.out.println(characterOption);
+                chooseChar(characterOption);
+
+            }
+            if (key == KeyEvent.VK_ENTER) {
+
+
+            }
         }
-
-        if (key == KeyEvent.VK_RIGHT) {
-            characterOption = characterOption +1;
-            System.out.println(characterOption);
-            chooseChar(characterOption);
-
-        }
-
     }
+public void topText(){
+   title = new JLabel();
+   title.setText("Dungeon Game");
+   title.setSize(new Dimension(300,150));
+    ImageIcon image_title = new ImageIcon("src/img/dungeon/title.png");
+    Icon icon_title = new ImageIcon(image_title.getImage().getScaledInstance(title.getWidth(), title.getHeight(), Image.SCALE_DEFAULT));
+    title.setIcon(icon_title);
+   title.setForeground(Color.WHITE);
+   title.setLocation(panelFirst.getWidth()/2 - 155, panelFirst.getHeight()/2 - 220);
+   panelFirst.add(title, 0);
+
+}
     public void chooseChar(int for_Character_option) {
 
 
@@ -154,7 +184,7 @@ public class Main {
 
         ImageIcon imagePriest = new ImageIcon("src/img/priest/priest_down.gif");
         Icon icon_priest = new ImageIcon(imagePriest.getImage().getScaledInstance(selectChar.getWidth(), selectChar.getHeight(), Image.SCALE_DEFAULT));
-// hola
+
         if (for_Character_option == 1) {
             selectChar.setIcon(icon_wizard);
            panelFirst.add(selectChar, 0);
