@@ -154,7 +154,7 @@ public class Main {
 
         ImageIcon imagePriest = new ImageIcon("src/img/priest/priest_down.gif");
         Icon icon_priest = new ImageIcon(imagePriest.getImage().getScaledInstance(selectChar.getWidth(), selectChar.getHeight(), Image.SCALE_DEFAULT));
-
+// hola
         if (for_Character_option == 1) {
             selectChar.setIcon(icon_wizard);
            panelFirst.add(selectChar, 0);
