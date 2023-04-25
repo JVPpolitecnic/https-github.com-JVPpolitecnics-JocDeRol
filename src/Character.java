@@ -5,6 +5,8 @@ public class Character {
     protected int lives;
     protected int goldCoins;
     protected int speed;
+
+    protected String direction;
     protected ArrayList<String> objects;
     protected int positionX;
     protected int positionY;
@@ -14,6 +16,7 @@ public class Character {
         this.lives = lives;
         this.goldCoins = goldCoins;
         this.speed = speed;
+        this.direction = "down";
         this.objects = objects;
         this.positionX = positionX;
         this.positionY = positionY;

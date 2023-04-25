@@ -1,11 +1,16 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class Main {
     private JPanel panelMain;
     public JPanel panelFirst;
+
+    public JPanel panelSecond;
+    JTextField textFieldName;
 
     public JButton buttonEnterGame;
     public JPanel panelTop;
@@ -15,6 +20,10 @@ public class Main {
     public JLabel heart2;
     public JLabel heart3;
 
+    public JLabel heart4;
+
+    public JLabel heart5;
+
     public JLabel floorTile;
 
     public JLabel selectChar;
@@ -22,17 +31,17 @@ public class Main {
 
     public JLabel[] floorTileArray;
 
+    public JPanel playerName;
+    public JButton enterName;
+
     public JLabel title;
+    protected Character player1;
+    String name;
 
     public Main() {
 
         // Wall and floor textures
-        floorTile = new JLabel();
-        Dimension dimen = new Dimension(32, 32);
-        floorTile.setSize(dimen);
-        ImageIcon image_floor = new ImageIcon("src/img/dungeon/tile001.png");
-        Icon icon_floor = new ImageIcon(image_floor.getImage().getScaledInstance(floorTile.getWidth(), floorTile.getHeight(), Image.SCALE_DEFAULT));
-        floorTile.setIcon(icon_floor);
+
         // buttons
         buttonEnterGame = new JButton();
         buttonEnterGame.setText("Enter game");
@@ -43,82 +52,100 @@ public class Main {
         // panels
 
 
-        panelMain.setPreferredSize(new Dimension(704, 480));
-        panelMain.setLayout(null);
-        panelMain.setFocusable(true);
+        panelMain = getPanelMain();
+        panelFirst = getPanelFirst();
+        panelSecond = getPanelSecond();
+        panelTop = getPanelTop();
 
-        panelFirst = new JPanel();
-        panelFirst.setSize(new Dimension(704, 480));
-        panelFirst.setLayout(null);
-        panelFirst.add(buttonEnterGame);
-        panelFirst.add(floorTile);
+        playerName = getPanelName();
         panelFirst.setFocusable(true);
         buttonEnterGame.setLocation(panelFirst.getWidth() / 2 - 60, panelFirst.getWidth() / 2);
-        floorTileArray = new JLabel[37];
-        for (int i = 0; i < floorTileArray.length; i++) {
-            floorTileArray[i] = floorTile;
-        }
-
-        //place tiles
-        int x = 0;
-        int y = 0;
-        for (int i = 0; i < panelFirst.getWidth(); i += 32) {
-
-            for (int j = 0; j < panelFirst.getHeight(); j += 32) {
-                floorTile = new JLabel();
-                floorTile.setSize(dimen);
-                floorTile.setIcon(icon_floor);
-                floorTile.setLocation(i, j);
-                panelFirst.add(floorTile);
-            }
-        }
 
 
         panelMain.add(panelFirst);
         panelMain.addKeyListener(new panelMainListener());
 
+
+
+
+        //get name
+
+        panelFirst.add(playerName);
+
+        textFieldName = new JTextField(10);
+        textFieldName.setBounds(50, 50, 150, 30);
+        textFieldName.setText("Player1");
+        playerName.add(textFieldName, 0);
+        enterName = new JButton();
+        enterName.setSize(40, 20);
+        enterName.setText("Enter");
+        playerName.setLocation(panelMain.getWidth() / 2, panelMain.getWidth() / 2);
+        enterName.addActionListener(new nameEntered());
+        playerName.add(enterName);
+        enterName.setFocusable(true);
+        //Visuals
+
+
+        heart = GameVisuals.heart(true);
+        heart2 = GameVisuals.heart(true);
+        heart3 = GameVisuals.heart(true);
+        heart4 = GameVisuals.heart(true);
+        heart5 = GameVisuals.heart(true);
+        panelTop.add(heart);
+
+
+        GameVisuals.placeTiles(panelFirst);
+        GameVisuals.placeTiles(panelSecond);
+        panelTop.add(heart2);
+
+
+        panelTop.add(heart3);
+        characterOption = 0;
+        selectChar = GameVisuals.getCharachter(characterOption, 100);
+        selectChar.setLocation(panelFirst.getWidth() / 2 - 65, panelFirst.getHeight() / 2 - 80);
+
+        panelFirst.add(selectChar, 0);
+        topText();
+        panelSecond.setFocusable(true);
+
+
+    }
+    private JPanel getPanelTop(){
         panelTop = new JPanel();
         panelTop.setSize(new Dimension(700, 50));
         panelTop.setBackground(Color.BLUE);
+        return panelTop;
+    }
+    private JPanel getPanelName(){
+        playerName = new JPanel();
+        playerName.setSize(new Dimension(200, 20));
+        playerName.setLayout(new GridLayout(1, 2));
 
+        return playerName;
+    }
 
-        //Visuals
+    private JPanel getPanelSecond() {
+        panelSecond = new JPanel();
+        panelSecond.setSize(new Dimension(704, 480));
+        panelSecond.setLayout(null);
 
-        // hearts:
+        return panelSecond;
+    }
 
-        // heart1
+    private JPanel getPanelFirst() {
+        panelFirst = new JPanel();
+        panelFirst.setSize(new Dimension(704, 480));
+        panelFirst.setLayout(null);
+        panelFirst.add(buttonEnterGame);
 
-        heart = new JLabel();
-        heart.setSize(30, 30);
-        ImageIcon image_full_heart = new ImageIcon("src/img/heart_full.png");
-        Icon icon_full_heart = new ImageIcon(image_full_heart.getImage().getScaledInstance(heart.getWidth(), heart.getHeight(), Image.SCALE_DEFAULT));
-        ImageIcon image_empty_heart = new ImageIcon("src/img/heart_empty.png");
-        Icon icon_empty_heart = new ImageIcon(image_empty_heart.getImage().getScaledInstance(heart.getWidth(), heart.getHeight(), Image.SCALE_DEFAULT));
-        heart.setIcon(icon_full_heart);
+        return panelFirst;
+    }
 
-        panelTop.add(heart);
-
-        //heart2
-
-        heart2 = new JLabel();
-        heart2.setSize(30, 30);
-        heart2.setIcon(icon_full_heart);
-
-
-        panelTop.add(heart2);
-
-        //heart3
-        heart3 = new JLabel();
-        heart3.setSize(30, 30);
-        heart3.setIcon(icon_full_heart);
-
-        panelTop.add(heart3);
-
-        selectChar = new JLabel();
-        selectChar.setLocation(panelFirst.getWidth() / 2 - 65, panelFirst.getHeight() / 2 - 80);
-        characterOption = 0;
-        chooseChar(characterOption);
-        topText();
+    private JPanel getPanelMain() {
+        panelMain.setPreferredSize(new Dimension(704, 480));
+        panelMain.setLayout(null);
+        panelMain.setFocusable(true);
+        return panelMain;
     }
 
     public static void main(String[] args) {
@@ -131,6 +158,14 @@ public class Main {
         frame.setLocation(300, 200);
     }
 
+    private class nameEntered implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            name = textFieldName.getText();
+            System.out.println(name);
+        }
+    }
+
     private class panelMainListener extends KeyAdapter {
         public void keyPressed(KeyEvent e) {
 
@@ -141,8 +176,11 @@ public class Main {
                 if (characterOption != 0) {
                     characterOption = characterOption - 1;
                 }
+                selectChar.setVisible(false);
                 System.out.println(characterOption);
-                chooseChar(characterOption);
+                selectChar = GameVisuals.getCharachter(characterOption, 100);
+                selectChar.setLocation(panelFirst.getWidth() / 2 - 65, panelFirst.getHeight() / 2 - 80);
+                panelFirst.add(selectChar, 0);
 
             }
 
@@ -150,15 +188,67 @@ public class Main {
                 if (characterOption != 2) {
                     characterOption = characterOption + 1;
                 }
+                selectChar.setVisible(false);
                 System.out.println(characterOption);
-                chooseChar(characterOption);
+                selectChar = GameVisuals.getCharachter(characterOption, 100);
+                selectChar.setLocation(panelFirst.getWidth() / 2 - 65, panelFirst.getHeight() / 2 - 80);
+                panelFirst.add(selectChar, 0);
 
             }
             if (key == KeyEvent.VK_ENTER) {
                 panelFirst.setVisible(false);
                 panelMain.add(panelTop);
+                panelMain.add(panelSecond);
+                //selectChar.setSize(50, 50);
+                panelSecond.add(selectChar, 0);
+                panelMain.setFocusable(false);
+                panelSecond.addKeyListener(new panelSecondListener());
+
+                System.out.println(name);
+
 
             }
+        }
+    }
+
+    private class panelSecondListener extends KeyAdapter {
+        public void keyPressed(KeyEvent e) {
+            int x, y;
+            int clicks;
+            boolean action;
+            x = selectChar.getX();
+            y = selectChar.getY();
+            int key = e.getKeyCode();
+            clicks = 0;
+            if (key == KeyEvent.VK_LEFT) {
+                x = x - 1;
+                System.out.println(x);
+
+                if (selectChar.getIcon() != GameVisuals.getIconMovingGIF(characterOption, 100, "LEFT")) {
+                    selectChar.setIcon(GameVisuals.getIconMovingGIF(characterOption, 100, "LEFT"));
+
+                    clicks++;
+                }
+            }
+
+            if (key == KeyEvent.VK_RIGHT) {
+
+                x = x + 1;
+                System.out.println(x);
+                selectChar.setIcon(GameVisuals.getIconMovingGIF(characterOption, 100, "RIGHT"));
+            }
+            if (key == KeyEvent.VK_UP) {
+                y = y - 1;
+                System.out.println(y);
+                selectChar.setIcon(GameVisuals.getIconMovingGIF(characterOption, 100, "UP"));
+            }
+            if (key == KeyEvent.VK_DOWN) {
+                y = y + 1;
+                System.out.println(y);
+                selectChar.setIcon(GameVisuals.getIconMovingGIF(characterOption, 100, "DOWN"));
+            }
+
+            selectChar.setLocation(x, y);
         }
     }
 
@@ -175,31 +265,5 @@ public class Main {
 
     }
 
-    public void chooseChar(int for_Character_option) {
 
-
-        selectChar.setSize(new Dimension(100, 100));
-        ImageIcon imageWizard = new ImageIcon("src/img/wizard/wizard_down.gif");
-        Icon icon_wizard = new ImageIcon(imageWizard.getImage().getScaledInstance(selectChar.getWidth(), selectChar.getHeight(), Image.SCALE_DEFAULT));
-
-        ImageIcon imageWarrior = new ImageIcon("src/img/warrior/warrior_down.gif");
-        Icon icon_warrior = new ImageIcon(imageWarrior.getImage().getScaledInstance(selectChar.getWidth(), selectChar.getHeight(), Image.SCALE_DEFAULT));
-
-        ImageIcon imagePriest = new ImageIcon("src/img/priest/priest_down.gif");
-        Icon icon_priest = new ImageIcon(imagePriest.getImage().getScaledInstance(selectChar.getWidth(), selectChar.getHeight(), Image.SCALE_DEFAULT));
-
-        if (for_Character_option == 1) {
-            selectChar.setIcon(icon_wizard);
-            panelFirst.add(selectChar, 0);
-        } else if (for_Character_option <= 0) {
-            selectChar.setIcon(icon_warrior);
-            panelFirst.add(selectChar, 0);
-        } else if (for_Character_option >= 2) {
-            selectChar.setIcon(icon_priest);
-            panelFirst.add(selectChar, 0);
-
-        }
-
-
-    }
 }
