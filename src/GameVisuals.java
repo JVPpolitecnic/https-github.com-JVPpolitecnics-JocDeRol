@@ -2,6 +2,35 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GameVisuals {
+
+    public static JLabel getArrowRight(boolean clicked){
+        JLabel arrw_righy = new JLabel();
+        arrw_righy.setSize(50,35);
+        ImageIcon arrow_red = new ImageIcon("src/img/dungeon/arrow_right_red.png");
+        Icon icon_red = new ImageIcon(arrow_red.getImage().getScaledInstance(arrw_righy.getWidth(), arrw_righy.getHeight(), Image.SCALE_DEFAULT));
+        ImageIcon arrow_white = new ImageIcon("src/img/dungeon/arrow_right.png");
+        Icon icon_white = new ImageIcon(arrow_white.getImage().getScaledInstance(arrw_righy.getWidth(), arrw_righy.getHeight(), Image.SCALE_DEFAULT));
+        if (clicked){
+            arrw_righy.setIcon(icon_red);
+        } else {
+            arrw_righy.setIcon(icon_white);
+        }
+        return arrw_righy;
+    }
+    public static JLabel getArrowLeft(boolean clicked){
+        JLabel arrw_left = new JLabel();
+        arrw_left.setSize(50,35);
+        ImageIcon arrow_red = new ImageIcon("src/img/dungeon/arrow_left_red.png");
+        Icon icon_red = new ImageIcon(arrow_red.getImage().getScaledInstance(arrw_left.getWidth(), arrw_left.getHeight(), Image.SCALE_DEFAULT));
+        ImageIcon arrow_white = new ImageIcon("src/img/dungeon/arrow_left.png");
+        Icon icon_white = new ImageIcon(arrow_white.getImage().getScaledInstance(arrw_left.getWidth(), arrw_left.getHeight(), Image.SCALE_DEFAULT));
+        if (clicked){
+            arrw_left.setIcon(icon_red);
+        } else {
+            arrw_left.setIcon(icon_white);
+        }
+        return arrw_left;
+    }
 public static JLabel heart(boolean full_heart){
     JLabel heart = new JLabel();
         heart.setSize(30,30);

@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.TimerTask;
 
 public class Main {
     private JPanel panelMain;
@@ -35,6 +36,10 @@ public class Main {
     public JButton enterName;
 
     public JLabel title;
+
+    public JLabel arrow_left;
+
+    public JLabel arrow_right;
     protected Character player1;
     String name;
 
@@ -65,7 +70,12 @@ public class Main {
         panelMain.add(panelFirst);
         panelMain.addKeyListener(new panelMainListener());
 
-
+        arrow_left = GameVisuals.getArrowLeft(false);
+        arrow_right = GameVisuals.getArrowRight(false);
+        arrow_left.setLocation(panelFirst.getWidth() / 2 - 75, panelFirst.getHeight() / 2);
+        arrow_right.setLocation(panelFirst.getWidth() / 2, panelFirst.getHeight() / 2);
+        panelFirst.add(arrow_left);
+        panelFirst.add(arrow_right);
 
 
         //get name
@@ -79,7 +89,7 @@ public class Main {
         enterName = new JButton();
         enterName.setSize(40, 20);
         enterName.setText("Enter");
-        playerName.setLocation(panelMain.getWidth() / 2, panelMain.getWidth() / 2);
+        playerName.setLocation(panelMain.getWidth() / 2 + 250, panelMain.getWidth() / 2 + 290);
         enterName.addActionListener(new nameEntered());
         playerName.add(enterName);
         enterName.setFocusable(true);
@@ -110,13 +120,15 @@ public class Main {
 
 
     }
-    private JPanel getPanelTop(){
+
+    private JPanel getPanelTop() {
         panelTop = new JPanel();
         panelTop.setSize(new Dimension(700, 50));
         panelTop.setBackground(Color.BLUE);
         return panelTop;
     }
-    private JPanel getPanelName(){
+
+    private JPanel getPanelName() {
         playerName = new JPanel();
         playerName.setSize(new Dimension(200, 20));
         playerName.setLayout(new GridLayout(1, 2));
@@ -181,6 +193,7 @@ public class Main {
                 selectChar = GameVisuals.getCharachter(characterOption, 100);
                 selectChar.setLocation(panelFirst.getWidth() / 2 - 65, panelFirst.getHeight() / 2 - 80);
                 panelFirst.add(selectChar, 0);
+                changeArrow("left");
 
             }
 
@@ -193,7 +206,7 @@ public class Main {
                 selectChar = GameVisuals.getCharachter(characterOption, 100);
                 selectChar.setLocation(panelFirst.getWidth() / 2 - 65, panelFirst.getHeight() / 2 - 80);
                 panelFirst.add(selectChar, 0);
-
+                changeArrow("right");
             }
             if (key == KeyEvent.VK_ENTER) {
                 panelFirst.setVisible(false);
@@ -210,7 +223,55 @@ public class Main {
             }
         }
     }
+private  void changeArrow(String direction){
 
+    TimerTask task = null;
+
+    if ( direction.equals("left")) {
+        arrow_left.setIcon(GameVisuals.getArrowLeft(true).getIcon());
+
+        // Fer Timer per posar a blanc després de 2seg
+        task = new TimerTask() {
+            public void run() {
+                arrow_left.setIcon(GameVisuals.getArrowLeft(false).getIcon());
+            }
+        };
+    }  else if (direction.equals("right")) {
+        arrow_right.setIcon(GameVisuals.getArrowRight(true).getIcon());
+
+        task = new TimerTask() {
+            public void run() {
+                arrow_right.setIcon(GameVisuals.getArrowRight(false).getIcon());
+            }
+        };
+    }
+
+    java.util.Timer timer = new java.util.Timer("hola");
+    timer.schedule(task, 1000);
+
+//
+//    Timer timer = new Timer(2000, new ActionListener() {
+//        @Override
+//        public void actionPerformed(ActionEvent e) {
+//            if ( direction.equals("left")) {
+//                if (arrow_left.getIcon() == GameVisuals.getArrowLeft(false).getIcon()) {
+//                    arrow_left.setIcon(GameVisuals.getArrowLeft(true).getIcon());
+//                } else {
+//                    arrow_left.setIcon(GameVisuals.getArrowLeft(false).getIcon());
+//                }
+//            } else if (direction.equals("right")) {
+//                if (arrow_right.getIcon() == GameVisuals.getArrowRight(false).getIcon())
+//                arrow_right.setIcon(GameVisuals.getArrowRight(true).getIcon());
+//            } else {
+//                arrow_right.setIcon(GameVisuals.getArrowRight(false).getIcon());
+//            }
+//        }
+//
+//
+//    });
+//
+//    timer.start();
+}
     private class panelSecondListener extends KeyAdapter {
         public void keyPressed(KeyEvent e) {
             int x, y;
