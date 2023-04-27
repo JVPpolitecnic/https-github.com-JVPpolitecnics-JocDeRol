@@ -40,7 +40,7 @@ public class Main {
     public JLabel arrow_left;
 
     public JLabel arrow_right;
-    protected Character player1;
+    protected Object player1;
     String name;
 
     public Main() {
@@ -118,7 +118,13 @@ public class Main {
         topText();
         panelSecond.setFocusable(true);
 
+if (characterOption == 0){
+    player1 = new Magician(name, 10, 20)
+} else if (characterOption == 1) {
 
+} else if (characterOption == 2) {
+
+}
     }
 
     private JPanel getPanelTop() {
