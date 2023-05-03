@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.TimerTask;
 
 public class Main {
@@ -28,6 +29,8 @@ public class Main {
     public JLabel floorTile;
 
     public JLabel selectChar;
+
+    public JLabel coin;
     public int characterOption;
 
     public JLabel[] floorTileArray;
@@ -40,7 +43,8 @@ public class Main {
     public JLabel arrow_left;
 
     public JLabel arrow_right;
-    protected Object player1;
+    protected ArrayList<String> arrayCollectedObjects;
+    protected Character player1;
     String name;
 
     public Main() {
@@ -117,14 +121,7 @@ public class Main {
         panelFirst.add(selectChar, 0);
         topText();
         panelSecond.setFocusable(true);
-
-if (characterOption == 0){
-    player1 = new Magician(name, 10, 20)
-} else if (characterOption == 1) {
-
-} else if (characterOption == 2) {
-
-}
+placeCoinCheckForHit(coin);
     }
 
     private JPanel getPanelTop() {
@@ -165,7 +162,11 @@ if (characterOption == 0){
         panelMain.setFocusable(true);
         return panelMain;
     }
+    private void placeCoinCheckForHit(JLabel f_coin){
+        f_coin.setLocation(panelSecond.getWidth()/2, panelSecond.getHeight()/2);
+        panelSecond.add(f_coin);
 
+    }
     public static void main(String[] args) {
         JFrame frame = new JFrame("Main");
         frame.setContentPane(new Main().panelMain);
@@ -224,7 +225,14 @@ if (characterOption == 0){
                 panelSecond.addKeyListener(new panelSecondListener());
 
                 System.out.println(name);
+                if (characterOption == 0){
+                    player1 = new Wizard(name, 10, 20, 5,"down", arrayCollectedObjects, 20, 20, "wizzard");
+                } else if (characterOption == 1) {
+                    player1 = new Warrior(name, 5, 10, 10, "down", arrayCollectedObjects, 20, 20, "warrior");
+                } else if (characterOption == 2) {
+                    player1 = new Priest(name, 5, 50,3, "down", arrayCollectedObjects, 20, 20, "priest");
 
+                }
 
             }
         }
@@ -291,9 +299,9 @@ private  void changeArrow(String direction){
                 x = x - 1;
                 System.out.println(x);
 
-                if (selectChar.getIcon() != GameVisuals.getIconMovingGIF(characterOption, 100, "LEFT")) {
+                if (!player1.getDirection().equals("left")) {
                     selectChar.setIcon(GameVisuals.getIconMovingGIF(characterOption, 100, "LEFT"));
-
+player1.setDirection("left");
                     clicks++;
                 }
             }
@@ -302,17 +310,27 @@ private  void changeArrow(String direction){
 
                 x = x + 1;
                 System.out.println(x);
-                selectChar.setIcon(GameVisuals.getIconMovingGIF(characterOption, 100, "RIGHT"));
-            }
+
+                if (!player1.getDirection().equals("right")) {
+                    selectChar.setIcon(GameVisuals.getIconMovingGIF(characterOption, 100, "RIGHT"));
+                player1.setDirection("right");
+                }
+                }
             if (key == KeyEvent.VK_UP) {
                 y = y - 1;
                 System.out.println(y);
-                selectChar.setIcon(GameVisuals.getIconMovingGIF(characterOption, 100, "UP"));
+                if (!player1.getDirection().equals("up")) {
+                    selectChar.setIcon(GameVisuals.getIconMovingGIF(characterOption, 100, "UP"));
+                    player1.setDirection("up");
+                }
             }
+
             if (key == KeyEvent.VK_DOWN) {
                 y = y + 1;
                 System.out.println(y);
+                if (!player1.getDirection().equals("down"))
                 selectChar.setIcon(GameVisuals.getIconMovingGIF(characterOption, 100, "DOWN"));
+            player1.setDirection("down");
             }
 
             selectChar.setLocation(x, y);
