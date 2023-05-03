@@ -121,9 +121,21 @@ public class Main {
         panelFirst.add(selectChar, 0);
         topText();
         panelSecond.setFocusable(true);
-placeCoinCheckForHit(coin);
-    }
+        coin = GameVisuals.getGoldCoin(20);
+        if (characterOption == 0){
+            player1 = new Wizard(name, 10, 20, 5,"down", arrayCollectedObjects, 20, 20, "wizzard");
+        } else if (characterOption == 1) {
+            player1 = new Warrior(name, 5, 10, 10, "down", arrayCollectedObjects, 20, 20, "warrior");
+        } else if (characterOption == 2) {
+            player1 = new Priest(name, 5, 50,3, "down", arrayCollectedObjects, 20, 20, "priest");
 
+        }
+placeCoinCheckForHit(coin, player1);
+    }
+private void playGame(){
+
+
+}
     private JPanel getPanelTop() {
         panelTop = new JPanel();
         panelTop.setSize(new Dimension(700, 50));
@@ -162,10 +174,27 @@ placeCoinCheckForHit(coin);
         panelMain.setFocusable(true);
         return panelMain;
     }
-    private void placeCoinCheckForHit(JLabel f_coin){
+    private void placeCoinCheckForHit(JLabel f_coin, Character p1){
         f_coin.setLocation(panelSecond.getWidth()/2, panelSecond.getHeight()/2);
-        panelSecond.add(f_coin);
-
+        panelSecond.add(f_coin, 0);
+        // check for collision with charachter.
+        boolean collision;
+        int leftpointOfRangeX = p1.getPositionX()-p1.getSpeed();
+        int rightpointOfRangeX = p1.getPositionX()+p1.getSpeed();
+        int rightpointOfRangeY = p1.getPositionY()+p1.getSpeed();
+        int leftpointOfRangeY = p1.getPositionY()-p1.getSpeed();
+        collision = false;
+if ((f_coin.getY() > leftpointOfRangeY && f_coin.getY() < rightpointOfRangeY) &&
+        (f_coin.getX() > leftpointOfRangeX && f_coin.getX() < rightpointOfRangeX)){
+    collision = true;
+}
+if (collision){
+    int randX, randY;
+    randY =  0 + (int)(Math.random() * panelSecond.getHeight()-panelTop.getHeight());
+    randX = 0 + (int)(Math.random() * panelSecond.getWidth());
+f_coin.setLocation(randX, randY);
+panelSecond.add(f_coin);
+}
     }
     public static void main(String[] args) {
         JFrame frame = new JFrame("Main");
@@ -225,14 +254,8 @@ placeCoinCheckForHit(coin);
                 panelSecond.addKeyListener(new panelSecondListener());
 
                 System.out.println(name);
-                if (characterOption == 0){
-                    player1 = new Wizard(name, 10, 20, 5,"down", arrayCollectedObjects, 20, 20, "wizzard");
-                } else if (characterOption == 1) {
-                    player1 = new Warrior(name, 5, 10, 10, "down", arrayCollectedObjects, 20, 20, "warrior");
-                } else if (characterOption == 2) {
-                    player1 = new Priest(name, 5, 50,3, "down", arrayCollectedObjects, 20, 20, "priest");
 
-                }
+                placeCoinCheckForHit(coin, player1);
 
             }
         }
@@ -263,40 +286,20 @@ private  void changeArrow(String direction){
     java.util.Timer timer = new java.util.Timer("hola");
     timer.schedule(task, 1000);
 
-//
-//    Timer timer = new Timer(2000, new ActionListener() {
-//        @Override
-//        public void actionPerformed(ActionEvent e) {
-//            if ( direction.equals("left")) {
-//                if (arrow_left.getIcon() == GameVisuals.getArrowLeft(false).getIcon()) {
-//                    arrow_left.setIcon(GameVisuals.getArrowLeft(true).getIcon());
-//                } else {
-//                    arrow_left.setIcon(GameVisuals.getArrowLeft(false).getIcon());
-//                }
-//            } else if (direction.equals("right")) {
-//                if (arrow_right.getIcon() == GameVisuals.getArrowRight(false).getIcon())
-//                arrow_right.setIcon(GameVisuals.getArrowRight(true).getIcon());
-//            } else {
-//                arrow_right.setIcon(GameVisuals.getArrowRight(false).getIcon());
-//            }
-//        }
-//
-//
-//    });
-//
-//    timer.start();
 }
     private class panelSecondListener extends KeyAdapter {
         public void keyPressed(KeyEvent e) {
             int x, y;
             int clicks;
+            int speed;
             boolean action;
             x = selectChar.getX();
             y = selectChar.getY();
+            speed = player1.getSpeed();
             int key = e.getKeyCode();
             clicks = 0;
             if (key == KeyEvent.VK_LEFT) {
-                x = x - 1;
+                x = x - speed;
                 System.out.println(x);
 
                 if (!player1.getDirection().equals("left")) {
@@ -308,7 +311,7 @@ player1.setDirection("left");
 
             if (key == KeyEvent.VK_RIGHT) {
 
-                x = x + 1;
+                x = x + speed;
                 System.out.println(x);
 
                 if (!player1.getDirection().equals("right")) {
@@ -317,7 +320,7 @@ player1.setDirection("left");
                 }
                 }
             if (key == KeyEvent.VK_UP) {
-                y = y - 1;
+                y = y - speed;
                 System.out.println(y);
                 if (!player1.getDirection().equals("up")) {
                     selectChar.setIcon(GameVisuals.getIconMovingGIF(characterOption, 100, "UP"));
@@ -326,7 +329,7 @@ player1.setDirection("left");
             }
 
             if (key == KeyEvent.VK_DOWN) {
-                y = y + 1;
+                y = y + speed;
                 System.out.println(y);
                 if (!player1.getDirection().equals("down"))
                 selectChar.setIcon(GameVisuals.getIconMovingGIF(characterOption, 100, "DOWN"));
@@ -334,6 +337,9 @@ player1.setDirection("left");
             }
 
             selectChar.setLocation(x, y);
+            player1.setPositionX(x);
+            player1.setPositionY(y);
+
         }
     }
 
