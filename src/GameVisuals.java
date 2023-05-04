@@ -200,7 +200,32 @@ return selectChar;
         }
 
     }
+    public static void placeWall(JPanel panel, JPanel topPanel){
+        JLabel wallTile = new JLabel();
+        Dimension dimen = new Dimension(32, 32);
+        wallTile.setSize(dimen);
+        ImageIcon image_wall = new ImageIcon("src/img/dungeon/tile004.png");
+        Icon icon_floor = new ImageIcon(image_wall.getImage().getScaledInstance(wallTile.getWidth(), wallTile.getHeight(), Image.SCALE_DEFAULT));
+        wallTile.setIcon(icon_floor);
 
+
+        //place tiles
+        int x = 0;
+        int y = 0;
+        for (int i = 0; i < panel.getWidth(); i += 32) {
+
+            for (int j = 0; j < panel.getHeight(); j += 32) {
+                if (i==0 || i == panel.getWidth()-32 ||j == panel.getHeight()-32|| j == 0 + topPanel.getHeight()+32)  {
+                    wallTile = new JLabel();
+                    wallTile.setSize(dimen);
+                    wallTile.setIcon(icon_floor);
+                    wallTile.setLocation(i, j);
+                    panel.add(wallTile, 0);
+                }
+            }
+        }
+
+    }
 
 
 }

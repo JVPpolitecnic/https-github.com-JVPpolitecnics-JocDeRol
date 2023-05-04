@@ -110,6 +110,7 @@ public class Main {
 
         GameVisuals.placeTiles(panelFirst);
         GameVisuals.placeTiles(panelSecond);
+        GameVisuals.placeWall(panelSecond, panelTop);
         panelTop.add(heart2);
 
 
@@ -122,20 +123,27 @@ public class Main {
         topText();
         panelSecond.setFocusable(true);
         coin = GameVisuals.getGoldCoin(20);
-        if (characterOption == 0){
-            player1 = new Wizard(name, 10, 20, 5,"down", arrayCollectedObjects, 20, 20, "wizzard");
-        } else if (characterOption == 1) {
-            player1 = new Warrior(name, 5, 10, 10, "down", arrayCollectedObjects, 20, 20, "warrior");
-        } else if (characterOption == 2) {
-            player1 = new Priest(name, 5, 50,3, "down", arrayCollectedObjects, 20, 20, "priest");
+        player1 = initializeCharacheter(characterOption);
 
-        }
-placeCoinCheckForHit(coin, player1);
     }
-private void playGame(){
 
+    private Character initializeCharacheter(int f_charOpt) {
+        Character selectedPlayer;
 
-}
+        switch (characterOption) {
+            case 0:
+                selectedPlayer = new Wizard(name, 10, 20, 5, "down", arrayCollectedObjects, 20, 20, "wizzard");
+                break;
+            case 1:
+                selectedPlayer = new Warrior(name, 5, 10, 10, "down", arrayCollectedObjects, 20, 20, "warrior");
+                break;
+            default:
+                selectedPlayer = new Priest(name, 5, 50, 3, "down", arrayCollectedObjects, 20, 20, "priest");
+        }
+
+        return selectedPlayer;
+    }
+
     private JPanel getPanelTop() {
         panelTop = new JPanel();
         panelTop.setSize(new Dimension(700, 50));
@@ -174,28 +182,39 @@ private void playGame(){
         panelMain.setFocusable(true);
         return panelMain;
     }
-    private void placeCoinCheckForHit(JLabel f_coin, Character p1){
-        f_coin.setLocation(panelSecond.getWidth()/2, panelSecond.getHeight()/2);
-        panelSecond.add(f_coin, 0);
-        // check for collision with charachter.
-        boolean collision;
-        int leftpointOfRangeX = p1.getPositionX()-p1.getSpeed();
-        int rightpointOfRangeX = p1.getPositionX()+p1.getSpeed();
-        int rightpointOfRangeY = p1.getPositionY()+p1.getSpeed();
-        int leftpointOfRangeY = p1.getPositionY()-p1.getSpeed();
-        collision = false;
-if ((f_coin.getY() > leftpointOfRangeY && f_coin.getY() < rightpointOfRangeY) &&
-        (f_coin.getX() > leftpointOfRangeX && f_coin.getX() < rightpointOfRangeX)){
-    collision = true;
-}
-if (collision){
-    int randX, randY;
-    randY =  0 + (int)(Math.random() * panelSecond.getHeight()-panelTop.getHeight());
-    randX = 0 + (int)(Math.random() * panelSecond.getWidth());
-f_coin.setLocation(randX, randY);
-panelSecond.add(f_coin);
-}
+
+    private boolean checkCollision(Character p1, JLabel labelToCheck, JLabel charLabel) {
+        int leftpointOfRangeX = p1.getPositionX();
+        int rightpointOfRangeX = p1.getPositionX() + charLabel.getWidth();
+        int rightpointOfRangeY = p1.getPositionY() + charLabel.getHeight();
+        int leftpointOfRangeY = p1.getPositionY();
+        int labelLeft = labelToCheck.getX();
+        int labelRight = labelToCheck.getX() + labelToCheck.getWidth();
+        int labelTop = labelToCheck.getY();
+        int labelBottom = labelToCheck.getY() + labelToCheck.getHeight();
+        boolean collision = false;
+        if (leftpointOfRangeX < labelRight && rightpointOfRangeX > labelLeft &&
+                leftpointOfRangeY < labelBottom && rightpointOfRangeY > labelTop) {
+            collision = true;
+        }
+        return collision;
     }
+
+
+    private void getCoin(JLabel f_coin, boolean collision) {
+
+
+        if (collision) {
+            int randX, randY;
+            randY = (0 + panelTop.getHeight()) + (int) (Math.random() * panelSecond.getHeight());
+            randX = 0 + (int) (Math.random() * panelSecond.getWidth() - f_coin.getWidth());
+            f_coin.setLocation(randX, randY);
+            panelSecond.add(f_coin, 0);
+
+
+        }
+    }
+
     public static void main(String[] args) {
         JFrame frame = new JFrame("Main");
         frame.setContentPane(new Main().panelMain);
@@ -254,45 +273,47 @@ panelSecond.add(f_coin);
                 panelSecond.addKeyListener(new panelSecondListener());
 
                 System.out.println(name);
+                getCoin(coin, true);
 
-                placeCoinCheckForHit(coin, player1);
 
             }
         }
     }
-private  void changeArrow(String direction){
 
-    TimerTask task = null;
+    private void changeArrow(String direction) {
 
-    if ( direction.equals("left")) {
-        arrow_left.setIcon(GameVisuals.getArrowLeft(true).getIcon());
+        TimerTask task = null;
 
-        // Fer Timer per posar a blanc després de 2seg
-        task = new TimerTask() {
-            public void run() {
-                arrow_left.setIcon(GameVisuals.getArrowLeft(false).getIcon());
-            }
-        };
-    }  else if (direction.equals("right")) {
-        arrow_right.setIcon(GameVisuals.getArrowRight(true).getIcon());
+        if (direction.equals("left")) {
+            arrow_left.setIcon(GameVisuals.getArrowLeft(true).getIcon());
 
-        task = new TimerTask() {
-            public void run() {
-                arrow_right.setIcon(GameVisuals.getArrowRight(false).getIcon());
-            }
-        };
+            // Fer Timer per posar a blanc després de 2seg
+            task = new TimerTask() {
+                public void run() {
+                    arrow_left.setIcon(GameVisuals.getArrowLeft(false).getIcon());
+                }
+            };
+        } else if (direction.equals("right")) {
+            arrow_right.setIcon(GameVisuals.getArrowRight(true).getIcon());
+
+            task = new TimerTask() {
+                public void run() {
+                    arrow_right.setIcon(GameVisuals.getArrowRight(false).getIcon());
+                }
+            };
+        }
+
+        java.util.Timer timer = new java.util.Timer("hola");
+        timer.schedule(task, 1000);
+
     }
 
-    java.util.Timer timer = new java.util.Timer("hola");
-    timer.schedule(task, 1000);
-
-}
     private class panelSecondListener extends KeyAdapter {
         public void keyPressed(KeyEvent e) {
             int x, y;
             int clicks;
             int speed;
-            boolean action;
+            boolean action, collision;
             x = selectChar.getX();
             y = selectChar.getY();
             speed = player1.getSpeed();
@@ -304,21 +325,25 @@ private  void changeArrow(String direction){
 
                 if (!player1.getDirection().equals("left")) {
                     selectChar.setIcon(GameVisuals.getIconMovingGIF(characterOption, 100, "LEFT"));
-player1.setDirection("left");
+                    player1.setDirection("left");
                     clicks++;
                 }
+                collision = checkCollision(player1, coin, selectChar);
+                getCoin(coin, collision);
             }
 
             if (key == KeyEvent.VK_RIGHT) {
-
-                x = x + speed;
+                if (x < panelSecond.getWidth() - 32 - selectChar.getWidth())
+                    x = x + speed;
                 System.out.println(x);
 
                 if (!player1.getDirection().equals("right")) {
                     selectChar.setIcon(GameVisuals.getIconMovingGIF(characterOption, 100, "RIGHT"));
-                player1.setDirection("right");
+                    player1.setDirection("right");
                 }
-                }
+                collision = checkCollision(player1, coin, selectChar);
+                getCoin(coin, collision);
+            }
             if (key == KeyEvent.VK_UP) {
                 y = y - speed;
                 System.out.println(y);
@@ -326,14 +351,20 @@ player1.setDirection("left");
                     selectChar.setIcon(GameVisuals.getIconMovingGIF(characterOption, 100, "UP"));
                     player1.setDirection("up");
                 }
+                collision = checkCollision(player1, coin, selectChar);
+                getCoin(coin, collision);
             }
 
             if (key == KeyEvent.VK_DOWN) {
-                y = y + speed;
+                if (y < panelSecond.getHeight() - 32 - selectChar.getHeight()) {
+                    y = y + speed;
+                }
                 System.out.println(y);
                 if (!player1.getDirection().equals("down"))
-                selectChar.setIcon(GameVisuals.getIconMovingGIF(characterOption, 100, "DOWN"));
-            player1.setDirection("down");
+                    selectChar.setIcon(GameVisuals.getIconMovingGIF(characterOption, 100, "DOWN"));
+                player1.setDirection("down");
+                collision = checkCollision(player1, coin, selectChar);
+                getCoin(coin, collision);
             }
 
             selectChar.setLocation(x, y);
