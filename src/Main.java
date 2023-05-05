@@ -9,40 +9,31 @@ import java.util.TimerTask;
 
 public class Main {
     private JPanel panelMain;
-    public JPanel panelFirst;
-
-    public JPanel panelSecond;
+    private JPanel panelFirst;
+    private JPanel panelSecond;
     JTextField textFieldName;
 
-    public JButton buttonEnterGame;
-    public JPanel panelTop;
-    public Timer enemyTimer;
-    public Timer characterTimer;
-    public JLabel heart;
-    public JLabel heart2;
-    public JLabel heart3;
+    private JButton buttonEnterGame;
+    private JPanel panelTop;
+    private Timer enemyTimer;
+    private JLabel heart;
+    private JLabel heart2;
+    private JLabel heart3;
 
-    public JLabel heart4;
+    private JLabel heart4;
 
-    public JLabel heart5;
+    private JLabel heart5;
+    private JLabel selectChar;
+    private JLabel coin;
 
-    public JLabel floorTile;
-
-    public JLabel selectChar;
-
-    public JLabel coin;
-    public int characterOption;
-
-    public JLabel[] floorTileArray;
-
-    public JPanel playerName;
-    public JButton enterName;
-
-    public JLabel title;
-
-    public JLabel arrow_left;
-
-    public JLabel arrow_right;
+    private int characterOption;
+    private JPanel playerName;
+    private JPanel panelGold;
+    private JButton enterName;
+    private JLabel title;
+    private JLabel arrow_left;
+    private JLabel arrow_right;
+    private JLabel goldCountTxt;
     protected ArrayList<String> arrayCollectedObjects;
     protected Character player1;
     String name;
@@ -62,14 +53,14 @@ public class Main {
 
 
         panelMain = getPanelMain();
-        panelFirst = getPanelFirst();
-        panelSecond = getPanelSecond();
+        panelFirst = getPanel();
+        panelSecond = getPanel();
         panelTop = getPanelTop();
 
-        playerName = getPanelName();
+        playerName = getPanelGridLayout(200, 20);
         panelFirst.setFocusable(true);
         buttonEnterGame.setLocation(panelFirst.getWidth() / 2 - 60, panelFirst.getWidth() / 2);
-
+        panelGold = getPanelGridLayout(64,32);
 
         panelMain.add(panelFirst);
         panelMain.addKeyListener(new panelMainListener());
@@ -81,7 +72,8 @@ public class Main {
         panelFirst.add(arrow_left);
         panelFirst.add(arrow_right);
 
-
+panelGold = getPanelGridLayout(64, 32);
+panelTop.add(panelGold);
         //get name
 
         panelFirst.add(playerName);
@@ -112,7 +104,7 @@ public class Main {
         GameVisuals.placeTiles(panelSecond);
         GameVisuals.placeWall(panelSecond, panelTop);
         panelTop.add(heart2);
-
+        panelFirst.add(buttonEnterGame, 0);
 
         panelTop.add(heart3);
         characterOption = 0;
@@ -124,6 +116,10 @@ public class Main {
         panelSecond.setFocusable(true);
         coin = GameVisuals.getGoldCoin(20);
         player1 = initializeCharacheter(characterOption);
+
+        panelTop.add(panelGold, 0);
+
+
 
     }
 
@@ -151,30 +147,25 @@ public class Main {
         return panelTop;
     }
 
-    private JPanel getPanelName() {
-        playerName = new JPanel();
-        playerName.setSize(new Dimension(200, 20));
-        playerName.setLayout(new GridLayout(1, 2));
-
-        return playerName;
+    private JPanel getPanelGridLayout(int width, int height) {
+        JPanel panelGridLayout = new JPanel();
+        panelGridLayout.setSize(width, height);
+        panelGridLayout.setLayout(new GridLayout(1, 2));
+// 200 20
+        return panelGridLayout;
     }
 
-    private JPanel getPanelSecond() {
-        panelSecond = new JPanel();
-        panelSecond.setSize(new Dimension(704, 480));
-        panelSecond.setLayout(null);
 
-        return panelSecond;
+
+    private JPanel getPanel() {
+        JPanel panel = new JPanel();
+        panel.setSize(new Dimension(704,480 ));
+        panel.setLayout(null);
+
+        return panel;
     }
 
-    private JPanel getPanelFirst() {
-        panelFirst = new JPanel();
-        panelFirst.setSize(new Dimension(704, 480));
-        panelFirst.setLayout(null);
-        panelFirst.add(buttonEnterGame);
 
-        return panelFirst;
-    }
 
     private JPanel getPanelMain() {
         panelMain.setPreferredSize(new Dimension(704, 480));
@@ -196,6 +187,8 @@ public class Main {
         if (leftpointOfRangeX < labelRight && rightpointOfRangeX > labelLeft &&
                 leftpointOfRangeY < labelBottom && rightpointOfRangeY > labelTop) {
             collision = true;
+            player1.setGoldCoins(player1.getGoldCoins() + 1);
+
         }
         return collision;
     }
@@ -205,9 +198,19 @@ public class Main {
 
 
         if (collision) {
-            int randX, randY;
-            randY = (0 + panelTop.getHeight()) + (int) (Math.random() * panelSecond.getHeight());
-            randX = 0 + (int) (Math.random() * panelSecond.getWidth() - f_coin.getWidth());
+            int randX, randY, minY, maxY, minX, maxX, wallDimenison;
+
+            wallDimenison = 32;
+            // Y limits
+            minY = panelTop.getHeight() + wallDimenison;
+            maxY = panelSecond.getHeight() - f_coin.getHeight() - wallDimenison;
+            // X limits
+            minX = 0 + wallDimenison;
+            maxX = panelSecond.getWidth() - f_coin.getWidth() - wallDimenison;
+            randY = (int) ((Math.random() * (maxY - minY)) + minY);
+            randX = (int) ((Math.random() * (maxX - minX)) + minX);
+
+
             f_coin.setLocation(randX, randY);
             panelSecond.add(f_coin, 0);
 
@@ -274,6 +277,9 @@ public class Main {
 
                 System.out.println(name);
                 getCoin(coin, true);
+                goldCountTxt.setText(player1.getGoldCoins()+" coins");
+                panelGold.add(coin);
+                panelGold.add(goldCountTxt, 0);
 
 
             }
