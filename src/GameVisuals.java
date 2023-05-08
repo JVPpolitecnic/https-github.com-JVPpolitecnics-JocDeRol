@@ -47,10 +47,10 @@ public static JLabel heart(boolean full_heart){
 return heart;
     }
 
-    public static JLabel getGoldCoin(int size){
+    public static JLabel getVisual(int size, String filepath){
         JLabel goldCoin = new JLabel();
 goldCoin.setSize(new Dimension(size, size));
-        ImageIcon imageCoin = new ImageIcon("src/img/dungeon/dollar.png");
+        ImageIcon imageCoin = new ImageIcon(filepath);
         Icon icon_coin = new ImageIcon(imageCoin.getImage().getScaledInstance(goldCoin.getWidth(), goldCoin.getHeight(), Image.SCALE_DEFAULT));
 goldCoin.setIcon(icon_coin);
         return goldCoin;

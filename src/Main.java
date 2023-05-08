@@ -24,7 +24,12 @@ public class Main {
 
     private JLabel heart5;
     private JLabel selectChar;
+
+    private JLabel sword;
     private JLabel coin;
+    private JLabel potion;
+
+    private JLabel monster;
 
     private int characterOption;
     private JPanel playerName;
@@ -33,6 +38,8 @@ public class Main {
     private JLabel title;
     private JLabel arrow_left;
     private JLabel arrow_right;
+
+    private ArrayList<JLabel> enemies;
     private JLabel goldCountTxt;
     protected ArrayList<String> arrayCollectedObjects;
     protected Character player1;
@@ -60,7 +67,7 @@ public class Main {
         playerName = getPanelGridLayout(200, 20);
         panelFirst.setFocusable(true);
         buttonEnterGame.setLocation(panelFirst.getWidth() / 2 - 60, panelFirst.getWidth() / 2);
-        panelGold = getPanelGridLayout(64,32);
+        panelGold = getPanelGridLayout(200,20);
 
         panelMain.add(panelFirst);
         panelMain.addKeyListener(new panelMainListener());
@@ -73,7 +80,11 @@ public class Main {
         panelFirst.add(arrow_right);
 
 panelGold = getPanelGridLayout(64, 32);
-panelTop.add(panelGold);
+panelGold.setBackground(Color.WHITE);
+panelGold.setVisible(true);
+
+panelTop.add(panelGold, 0);
+
         //get name
 
         panelFirst.add(playerName);
@@ -114,15 +125,63 @@ panelTop.add(panelGold);
         panelFirst.add(selectChar, 0);
         topText();
         panelSecond.setFocusable(true);
-        coin = GameVisuals.getGoldCoin(20);
+        coin = GameVisuals.getVisual(20, "src/img/dungeon/dollar.png");
         player1 = initializeCharacheter(characterOption);
 
         panelTop.add(panelGold, 0);
 
+sword = GameVisuals.getVisual(20, "src/img/dungeon/sword.png");
+sword.setLocation(panelSecond.getWidth()/2, panelSecond.getHeight()/2);
+        panelSecond.add(sword, 0);
 
+potion = GameVisuals.getVisual(20, "src/img/dungeon/potion.png");
+potion.setLocation(panelSecond.getWidth()/3, panelSecond.getHeight()/2);
+panelSecond.add(potion, 0);
+monster = GameVisuals.getVisual(70, "src/img/skeleton/skeleton_down.gif");
+monster.setLocation(panelSecond.getWidth()/3, panelSecond.getHeight()/3);
+panelSecond.add(monster, 0);
+enemies = new ArrayList<>();
+fillMonsterArray();
+Timer timer_enemy = new Timer(1000, new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        int direction, min, max;
+        min = 0;
+        max = 3;
+        direction = (int) ((Math.random() * (max - min)) + min);
+
+        switch (direction){
+            case 0:
+                //up
+
+                break;
+            case 1:
+                //down
+                break;
+            case 2:
+                //left
+                break;
+            case 3:
+                //right
+                break;
+        }
+    }
+});
+    }
+private void fillMonsterArray(){
+    for (int i = 0; i <5 ; i++) {
+
+       JLabel enemy = GameVisuals.getVisual(70, "src/img/skeleton/skeleton_down.gif");
+       enemies.add(enemy);
+        int randY =
+        int randX = (int) ((Math.random() * (panelSecond.getWidth()+32+ enemy.getWidth() - 32 + enemy.getWidth())) + 32);
+        System.out.println("fill");
+        enemies.get(i).setLocation(randX, randY);
+        panelSecond.add(enemies.get(i), 0);
 
     }
 
+}
     private Character initializeCharacheter(int f_charOpt) {
         Character selectedPlayer;
 
@@ -278,8 +337,9 @@ panelTop.add(panelGold);
                 System.out.println(name);
                 getCoin(coin, true);
                 goldCountTxt.setText(player1.getGoldCoins()+" coins");
-                panelGold.add(coin);
+                panelGold.add(coin, 0);
                 panelGold.add(goldCountTxt, 0);
+
 
 
             }
@@ -326,23 +386,26 @@ panelTop.add(panelGold);
             int key = e.getKeyCode();
             clicks = 0;
             if (key == KeyEvent.VK_LEFT) {
-                x = x - speed;
-                System.out.println(x);
+                if (x>32) {
+                    x = x - speed;
+                    System.out.println(x);
+                }
 
                 if (!player1.getDirection().equals("left")) {
                     selectChar.setIcon(GameVisuals.getIconMovingGIF(characterOption, 100, "LEFT"));
                     player1.setDirection("left");
-                    clicks++;
+
                 }
                 collision = checkCollision(player1, coin, selectChar);
                 getCoin(coin, collision);
+                panelTop.add(panelGold, 0);
             }
 
             if (key == KeyEvent.VK_RIGHT) {
                 if (x < panelSecond.getWidth() - 32 - selectChar.getWidth())
                     x = x + speed;
                 System.out.println(x);
-
+                System.out.println(goldCountTxt);
                 if (!player1.getDirection().equals("right")) {
                     selectChar.setIcon(GameVisuals.getIconMovingGIF(characterOption, 100, "RIGHT"));
                     player1.setDirection("right");
@@ -351,6 +414,7 @@ panelTop.add(panelGold);
                 getCoin(coin, collision);
             }
             if (key == KeyEvent.VK_UP) {
+                if (y > panelTop.getHeight()+32)
                 y = y - speed;
                 System.out.println(y);
                 if (!player1.getDirection().equals("up")) {
