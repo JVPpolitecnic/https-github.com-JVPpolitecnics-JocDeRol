@@ -43,10 +43,12 @@ public class Main {
     private JLabel goldCountTxt;
     protected ArrayList<String> arrayCollectedObjects;
     protected Character player1;
+
+    private Skeleton skeleton;
     String name;
 
     public Main() {
-
+        skeleton = new Skeleton("down");
         // Wall and floor textures
 
         // buttons
@@ -67,7 +69,7 @@ public class Main {
         playerName = getPanelGridLayout(200, 20);
         panelFirst.setFocusable(true);
         buttonEnterGame.setLocation(panelFirst.getWidth() / 2 - 60, panelFirst.getWidth() / 2);
-        panelGold = getPanelGridLayout(200,20);
+        panelGold = getPanelGridLayout(200, 20);
 
         panelMain.add(panelFirst);
         panelMain.addKeyListener(new panelMainListener());
@@ -79,11 +81,11 @@ public class Main {
         panelFirst.add(arrow_left);
         panelFirst.add(arrow_right);
 
-panelGold = getPanelGridLayout(64, 32);
-panelGold.setBackground(Color.WHITE);
-panelGold.setVisible(true);
+        panelGold = getPanelGridLayout(64, 32);
+        panelGold.setBackground(Color.WHITE);
+        panelGold.setVisible(true);
 
-panelTop.add(panelGold, 0);
+        panelTop.add(panelGold, 0);
 
         //get name
 
@@ -130,58 +132,102 @@ panelTop.add(panelGold, 0);
 
         panelTop.add(panelGold, 0);
 
-sword = GameVisuals.getVisual(20, "src/img/dungeon/sword.png");
-sword.setLocation(panelSecond.getWidth()/2, panelSecond.getHeight()/2);
+        sword = GameVisuals.getVisual(20, "src/img/dungeon/sword.png");
+        sword.setLocation(panelSecond.getWidth() / 2, panelSecond.getHeight() / 2);
         panelSecond.add(sword, 0);
 
-potion = GameVisuals.getVisual(20, "src/img/dungeon/potion.png");
-potion.setLocation(panelSecond.getWidth()/3, panelSecond.getHeight()/2);
-panelSecond.add(potion, 0);
-monster = GameVisuals.getVisual(70, "src/img/skeleton/skeleton_down.gif");
-monster.setLocation(panelSecond.getWidth()/3, panelSecond.getHeight()/3);
-panelSecond.add(monster, 0);
-enemies = new ArrayList<>();
-fillMonsterArray();
-Timer timer_enemy = new Timer(1000, new ActionListener() {
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        int direction, min, max;
-        min = 0;
-        max = 3;
-        direction = (int) ((Math.random() * (max - min)) + min);
+        potion = GameVisuals.getVisual(20, "src/img/dungeon/potion.png");
+        potion.setLocation(panelSecond.getWidth() / 3, panelSecond.getHeight() / 2);
+        panelSecond.add(potion, 0);
+        monster = GameVisuals.getVisual(70, "src/img/skeleton/skeleton_down.gif");
+        monster.setLocation(panelSecond.getWidth() / 3, panelSecond.getHeight() / 3);
+        panelSecond.add(monster, 0);
+        enemies = new ArrayList<>();
+        fillMonsterArray("src/img/skeleton/skeleton_down.gif");
+        Timer timer_enemy = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int direction, min, max, y, x;
+                min = 0;
+                max = 3;
+                y = 0;
+                x = 0;
+                direction = (int) ((Math.random() * (max - min)) + min);
 
-        switch (direction){
-            case 0:
-                //up
+                switch (direction) {
+                    case 0:
+                        //up
+                        if (!skeleton.getDirection().equals("up")) {
+                            fillMonsterArray("src/img/skeleton/skeleton_up.gif");
+                            skeleton.setDirection("up");
+                        }
+                        y -= 4;
+                        x = enemies.get(0).getX();
+                        move_monsters(x, y);
+                        break;
+                    case 1:
+                        //down
+                        if (!skeleton.getDirection().equals("down")) {
+                            fillMonsterArray("src/img/skeleton/skeleton_down.gif");
+                            skeleton.setDirection("down");
+                        }
+                        y += 4;
+                        x = enemies.get(0).getX();
+                        break;
+                    case 2:
+                        //left
+                        if (!skeleton.getDirection().equals("left")) {
+                            fillMonsterArray("src/img/skeleton/skeleton_left.gif");
+                            skeleton.setDirection("left");
+                        }
+                        y = enemies.get(0).getY();;
+                        x -= 4;
+                        break;
+                    case 3:
+                        //right
+                        if (!skeleton.getDirection().equals("right")) {
+                            fillMonsterArray("src/img/skeleton/skeleton_left.gif");
+                            skeleton.setDirection("right");
+                        }
+                        y = enemies.get(0).getY();;
+                        x += 4;
+                        break;
+                }
+            }
+        });
+        timer_enemy.start();
+    }
 
-                break;
-            case 1:
-                //down
-                break;
-            case 2:
-                //left
-                break;
-            case 3:
-                //right
-                break;
+    private void move_monsters(int x, int y) {
+        for (int i = 0; i < enemies.toArray().length; i++) {
+            enemies.get(i).setLocation(x, y);
+            panelSecond.add(enemies.get(i), 0);
         }
     }
-});
+
+    private void fillMonsterArray(String icon) {
+        for (int i = 0; i < 5; i++) {
+
+            JLabel enemy = GameVisuals.getVisual(70, icon);
+            enemies.add(enemy);
+            int randX, randY, minY, maxY, minX, maxX, wallDimenison;
+
+            wallDimenison = 32;
+            // Y limits
+            minY = panelTop.getHeight() + wallDimenison;
+            maxY = panelSecond.getHeight() - enemy.getHeight() - wallDimenison;
+            // X limits
+            minX = 0 + wallDimenison;
+            maxX = panelSecond.getWidth() - enemy.getWidth() - wallDimenison;
+            randY = (int) ((Math.random() * (maxY - minY)) + minY);
+            randX = (int) ((Math.random() * (maxX - minX)) + minX);
+            enemies.get(i).setLocation(randX, randY);
+            panelSecond.add(enemies.get(i), 0);
+
+        }
+
     }
-private void fillMonsterArray(){
-    for (int i = 0; i <5 ; i++) {
 
-       JLabel enemy = GameVisuals.getVisual(70, "src/img/skeleton/skeleton_down.gif");
-       enemies.add(enemy);
-        //int randY =
-        int randX = (int) ((Math.random() * (panelSecond.getWidth()+32+ enemy.getWidth() - 32 + enemy.getWidth())) + 32);
-        System.out.println("fill");
-        //enemies.get(i).setLocation(randX, randY);
-        panelSecond.add(enemies.get(i), 0);
-
-    }
-
-}
     private Character initializeCharacheter(int f_charOpt) {
         Character selectedPlayer;
 
@@ -215,15 +261,13 @@ private void fillMonsterArray(){
     }
 
 
-
     private JPanel getPanel() {
         JPanel panel = new JPanel();
-        panel.setSize(new Dimension(704,480 ));
+        panel.setSize(new Dimension(704, 480));
         panel.setLayout(null);
 
         return panel;
     }
-
 
 
     private JPanel getPanelMain() {
@@ -336,10 +380,9 @@ private void fillMonsterArray(){
 
                 System.out.println(name);
                 getCoin(coin, true);
-                goldCountTxt.setText(player1.getGoldCoins()+" coins");
+                goldCountTxt.setText(player1.getGoldCoins() + " coins");
                 panelGold.add(coin, 0);
                 panelGold.add(goldCountTxt, 0);
-
 
 
             }
@@ -386,7 +429,7 @@ private void fillMonsterArray(){
             int key = e.getKeyCode();
             clicks = 0;
             if (key == KeyEvent.VK_LEFT) {
-                if (x>32) {
+                if (x > 32) {
                     x = x - speed;
                     System.out.println(x);
                 }
@@ -414,8 +457,8 @@ private void fillMonsterArray(){
                 getCoin(coin, collision);
             }
             if (key == KeyEvent.VK_UP) {
-                if (y > panelTop.getHeight()+32)
-                y = y - speed;
+                if (y > panelTop.getHeight() + 32)
+                    y = y - speed;
                 System.out.println(y);
                 if (!player1.getDirection().equals("up")) {
                     selectChar.setIcon(GameVisuals.getIconMovingGIF(characterOption, 100, "UP"));
