@@ -173,10 +173,10 @@ private void fillMonsterArray(){
 
        JLabel enemy = GameVisuals.getVisual(70, "src/img/skeleton/skeleton_down.gif");
        enemies.add(enemy);
-        int randY =
+        //int randY =
         int randX = (int) ((Math.random() * (panelSecond.getWidth()+32+ enemy.getWidth() - 32 + enemy.getWidth())) + 32);
         System.out.println("fill");
-        enemies.get(i).setLocation(randX, randY);
+        //enemies.get(i).setLocation(randX, randY);
         panelSecond.add(enemies.get(i), 0);
 
     }
