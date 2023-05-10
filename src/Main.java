@@ -162,35 +162,38 @@ public class Main {
                             skeleton.setDirection("up");
                         }
                         y -= 4;
-                        x = enemies.get(0).getX();
-                        move_monsters(x, y);
+
+                        move_monstersY(y);
                         break;
                     case 1:
                         //down
                         if (!skeleton.getDirection().equals("down")) {
-                            fillMonsterArray("src/img/skeleton/skeleton_down.gif");
+                            changeIcon("src/img/skeleton/skeleton_down.gif");
                             skeleton.setDirection("down");
                         }
                         y += 4;
                         x = enemies.get(0).getX();
+                        move_monstersY(y);
                         break;
                     case 2:
                         //left
                         if (!skeleton.getDirection().equals("left")) {
-                            fillMonsterArray("src/img/skeleton/skeleton_left.gif");
+                            changeIcon("src/img/skeleton/skeleton_left.gif");
                             skeleton.setDirection("left");
                         }
                         y = enemies.get(0).getY();;
                         x -= 4;
+                        move_monstersX(x);
                         break;
                     case 3:
                         //right
                         if (!skeleton.getDirection().equals("right")) {
-                            fillMonsterArray("src/img/skeleton/skeleton_left.gif");
+                            changeIcon("src/img/skeleton/skeleton_left.gif");
                             skeleton.setDirection("right");
                         }
                         y = enemies.get(0).getY();;
                         x += 4;
+                        move_monstersX(x);
                         break;
                 }
             }
@@ -198,13 +201,23 @@ public class Main {
         timer_enemy.start();
     }
 
-    private void move_monsters(int x, int y) {
+    private void move_monstersX(int x) {
         for (int i = 0; i < enemies.toArray().length; i++) {
-            enemies.get(i).setLocation(x, y);
+            enemies.get(i).setLocation(enemies.get(i).getX()+ x, enemies.get(i).getY());
             panelSecond.add(enemies.get(i), 0);
         }
     }
-
+    private void move_monstersY(int y) {
+        for (int i = 0; i < enemies.toArray().length; i++) {
+            enemies.get(i).setLocation(enemies.get(i).getX(), enemies.get(i).getY() + y);
+            panelSecond.add(enemies.get(i), 0);
+        }
+    }
+private void changeIcon(String icon){
+    for (int i = 0; i < enemies.toArray().length ; i++) {
+        enemies.get(i).setIcon(GameVisuals.getVisual(70, icon).getIcon());
+    }
+}
     private void fillMonsterArray(String icon) {
         for (int i = 0; i < 5; i++) {
 
