@@ -175,7 +175,7 @@ if (!enemies.get(i).getIcon().equals(GameVisuals.getVisual(70,"src/img/skeleton/
 
 
                             y = enemySpeed;
-                            if (enemies.get(i).getY() > panelTop.getHeight() + enemies.get(i).getHeight()) {
+                            if (enemies.get(i).getY() > (panelTop.getHeight() + enemies.get(i).getHeight())) {
                                 move_monstersY(y, i, "up");
                             } else {
                                 move_monstersY(y, i, "down");
@@ -193,7 +193,7 @@ if (!enemies.get(i).getIcon().equals(GameVisuals.getVisual(70,"src/img/skeleton/
 
 
                             y = enemySpeed;
-                            if (enemies.get(i).getY() < panelSecond.getHeight() - 32 - enemies.get(i).getHeight()) {
+                            if (enemies.get(i).getY() < (panelSecond.getHeight() - 32 - enemies.get(i).getHeight())) {
                                 move_monstersY(y, i, "down");
                             }
 
@@ -209,7 +209,7 @@ if (!enemies.get(i).getIcon().equals(GameVisuals.getVisual(70,"src/img/skeleton/
 
 
                             x = enemySpeed;
-                            if (enemies.get(i).getX() >  32 + enemies.get(i).getWidth()) {
+                            if (enemies.get(i).getX() >  (32 + enemies.get(i).getWidth())) {
                                 move_monstersX(x, i, "left");
                             }
 
@@ -225,7 +225,7 @@ if (!enemies.get(i).getIcon().equals(GameVisuals.getVisual(70,"src/img/skeleton/
 
                             x = enemySpeed;
 
-                            if (enemies.get(i).getX() < panelSecond.getWidth() - 32 - enemies.get(i).getWidth()) {
+                            if (enemies.get(i).getX() < (panelSecond.getWidth() - 32 - enemies.get(i).getWidth())) {
                                 move_monstersX(x, i, "right");
                             } else {
                              directions.get(i).equals(2);
@@ -288,7 +288,7 @@ if (direction.equals("right")) {
     }
 
     private void fillMonsterArrayJLabel(String icon) {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 1; i++) {
 
             JLabel enemy = GameVisuals.getVisual(70, icon);
             enemies.add(enemy);
