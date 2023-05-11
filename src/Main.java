@@ -178,8 +178,7 @@ if (!enemies.get(i).getIcon().equals(GameVisuals.getVisual(70,"src/img/skeleton/
                             if (enemies.get(i).getY() > panelTop.getHeight() + enemies.get(i).getHeight()) {
                                 move_monstersY(y, i, "up");
                             } else {
-                                directions.get(i).equals(1);
-                                i = 0;
+                                move_monstersY(y, i, "down");
                             }
 
 
@@ -228,6 +227,9 @@ if (!enemies.get(i).getIcon().equals(GameVisuals.getVisual(70,"src/img/skeleton/
 
                             if (enemies.get(i).getX() < panelSecond.getWidth() - 32 - enemies.get(i).getWidth()) {
                                 move_monstersX(x, i, "right");
+                            } else {
+                             directions.get(i).equals(2);
+
                             }
 
 
