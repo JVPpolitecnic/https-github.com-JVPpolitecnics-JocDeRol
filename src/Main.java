@@ -40,11 +40,14 @@ public class Main {
     private JLabel title;
     private JLabel arrow_left;
     private JLabel arrow_right;
+    private JLabel mitra;
 
     private ArrayList<Integer> directions;
 
     private ArrayList<JLabel> enemies;
     private JLabel goldCountTxt;
+
+
     protected ArrayList<String> arrayCollectedObjects;
     protected Character player1;
 
@@ -142,7 +145,7 @@ public class Main {
         sword = GameVisuals.getVisual(20, "src/img/dungeon/sword.png");
         sword.setLocation(panelSecond.getWidth() / 2, panelSecond.getHeight() / 2);
         panelSecond.add(sword, 0);
-
+        mitra = GameVisuals.getVisual(20, "src/img/dungeon/mitra.png");
         potion = GameVisuals.getVisual(20, "src/img/dungeon/potion.png");
         potion.setLocation(panelSecond.getWidth() / 3, panelSecond.getHeight() / 2);
         panelSecond.add(potion, 0);
@@ -151,6 +154,14 @@ public class Main {
         fillMonsterArrayJLabel("src/img/skeleton/skeleton_down.gif");
         skeletons = new ArrayList<>();
         fillSKeletonObjArray();
+        randomDirections();
+        Timer timer_rand_directions = new Timer(100000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                randomDirections();
+            }
+        });
+        timer_rand_directions.start();
         Timer timer_enemy = new Timer(50, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -159,81 +170,46 @@ public class Main {
                 y = 0;
                 x = 0;
                 int enemySpeed = 3;
-                randomDirections();
+
                 for (int i = 0; i < enemies.toArray().length; i++) {
 
 
-                    switch (directions.get(i)) {
-                        case 0:
-                            //up
-
-if (!enemies.get(i).getIcon().equals(GameVisuals.getVisual(70,"src/img/skeleton/skeleton_up.gif"))) {
-    changeIcon("src/img/skeleton/skeleton_up.gif", i);
-    skeletons.get(i).setDirection("up");
-}
-
-
-
-                            y = enemySpeed;
-                            if (enemies.get(i).getY() > (panelTop.getHeight() + enemies.get(i).getHeight())) {
-                                move_monstersY(y, i, "up");
-                            } else {
-                                move_monstersY(y, i, "down");
-                            }
-
-
-                            break;
-                        case 1:
-
-                            //down
-
-
-                                changeIcon("src/img/skeleton/skeleton_down.gif", i);
-                                skeletons.get(i).setDirection("down");
-
-
-                            y = enemySpeed;
-                            if (enemies.get(i).getY() < (panelSecond.getHeight() - 32 - enemies.get(i).getHeight())) {
-                                move_monstersY(y, i, "down");
-                            }
-
-                            break;
-                        case 2:
-
-                            //left
-
-
-                                changeIcon("src/img/skeleton/skeleton_left.gif", i);
-                                skeletons.get(i).setDirection("left");
-
-
-
-                            x = enemySpeed;
-                            if (enemies.get(i).getX() >  (32 + enemies.get(i).getWidth())) {
-                                move_monstersX(x, i, "left");
-                            }
-
-
-                            break;
-                        case 3:
-                            //right
-
-
-                                changeIcon("src/img/skeleton/skeleton_right.gif", i);
-                                skeletons.get(i).setDirection("right");
-
-
-                            x = enemySpeed;
-
-                            if (enemies.get(i).getX() < (panelSecond.getWidth() - 32 - enemies.get(i).getWidth())) {
-                                move_monstersX(x, i, "right");
-                            } else {
-                             directions.get(i).equals(2);
-
-                            }
-
-
-                            break;
+                    if (skeletons.get(i).getDirection().equals("up")) {
+                        y = enemySpeed;
+                        move_monstersY(y, i, "up");
+                        if (enemies.get(i).getIcon() != GameVisuals.getVisual(70, "src/img/skeleton/skeleton_up.gif").getIcon()) {
+                            changeIcon("src/img/skeleton/skeleton_up.gif", i);
+                        }
+                        if (enemies.get(i).getY() < panelTop.getHeight() + 32 + enemies.get(i).getHeight()) {
+                            skeletons.get(i).setDirection("down");
+                        }
+                    } else if (skeletons.get(i).getDirection().equals("down")) {
+                        y = enemySpeed;
+                        move_monstersY(y, i, "down");
+                        if (enemies.get(i).getIcon() != GameVisuals.getVisual(70, "src/img/skeleton/skeleton_down.gif").getIcon()) {
+                            changeIcon("src/img/skeleton/skeleton_down.gif", i);
+                        }
+                        if (enemies.get(i).getY() > panelSecond.getHeight() - 32 - enemies.get(i).getHeight()) {
+                            skeletons.get(i).setDirection("up");
+                        }
+                    } else if (skeletons.get(i).getDirection().equals("left")) {
+                        x = enemySpeed;
+                        move_monstersX(x, i, "left");
+                        if (enemies.get(i).getIcon() != GameVisuals.getVisual(70, "src/img/skeleton/skeleton_left.gif").getIcon()) {
+                            changeIcon("src/img/skeleton/skeleton_left.gif", i);
+                        }
+                        if (enemies.get(i).getX() < 32) {
+                            skeletons.get(i).setDirection("down");
+                        }
+                    } else {
+                        x = enemySpeed;
+                        move_monstersX(x, i, "right");
+                        if (enemies.get(i).getIcon() != GameVisuals.getVisual(70, "src/img/skeleton/skeleton_right.gif").getIcon()) {
+                            changeIcon("src/img/skeleton/skeleton_right.gif", i);
+                        }
+                        if (enemies.get(i).getX() > panelSecond.getWidth() - 32) {
+                            skeletons.get(i).setDirection("left");
+                        }
                     }
                 }
             }
@@ -250,24 +226,34 @@ if (!enemies.get(i).getIcon().equals(GameVisuals.getVisual(70,"src/img/skeleton/
     private void randomDirections() {
         int min = 0;
         int max = 4;
+        String direction;
         for (int i = 0; i < enemies.toArray().length; i++) {
 
 
-            int direction = (int) ((Math.random() * (max - min)) + min);
-            directions.add(direction);
+            int num = (int) ((Math.random() * (max - min)) + min);
+            if (num == 1) {
+                direction = "up";
+            } else if (num == 2) {
+                direction = "down";
+            } else if (num == 3) {
+                direction = "left";
+            } else {
+                direction = "right";
+            }
+            skeletons.get(i).setDirection(direction);
         }
 
 
     }
 
     private void move_monstersX(int x, int i, String direction) {
-if (direction.equals("right")) {
-    enemies.get(i).setLocation(enemies.get(i).getX() + x, enemies.get(i).getY());
-    panelSecond.add(enemies.get(i), 0);
-} else {
-    enemies.get(i).setLocation(enemies.get(i).getX() - x, enemies.get(i).getY());
-    panelSecond.add(enemies.get(i), 0);
-}
+        if (direction.equals("right")) {
+            enemies.get(i).setLocation(enemies.get(i).getX() + x, enemies.get(i).getY());
+            panelSecond.add(enemies.get(i), 0);
+        } else {
+            enemies.get(i).setLocation(enemies.get(i).getX() - x, enemies.get(i).getY());
+            panelSecond.add(enemies.get(i), 0);
+        }
     }
 
     private void move_monstersY(int y, int i, String direction) {
@@ -283,12 +269,12 @@ if (direction.equals("right")) {
 
     private void changeIcon(String icon, int i) {
 
-            enemies.get(i).setIcon(GameVisuals.getVisual(70, icon).getIcon());
+        enemies.get(i).setIcon(GameVisuals.getVisual(70, icon).getIcon());
 
     }
 
     private void fillMonsterArrayJLabel(String icon) {
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 5; i++) {
 
             JLabel enemy = GameVisuals.getVisual(70, icon);
             enemies.add(enemy);
@@ -567,6 +553,25 @@ if (direction.equals("right")) {
             player1.setPositionX(x);
             player1.setPositionY(y);
 
+        }
+    }
+
+    private void checkForCollisionWithcollectable(JLabel collectable, Character char1, JLabel charLabel) {
+        boolean collided;
+        String item_name;
+        collided = checkCollision(char1, collectable, charLabel);
+        item_name = " ";
+        if (collectable.getIcon() == GameVisuals.getVisual(20, "src/img/dungeon/sword.png").getIcon()) {
+            item_name = "sword";
+        } else if (collectable.getIcon() == GameVisuals.getVisual(20, "src/img/dungeon/potion.png").getIcon()) {
+            item_name = "potion";
+        } else if (collectable.getIcon() == GameVisuals.getVisual(20, "src/img/dungeon/mitra.png")) {
+            item_name = "mitra";
+        }
+
+        if (collided) {
+            arrayCollectedObjects.add(item_name);
+            char1.setObjects(arrayCollectedObjects);
         }
     }
 
