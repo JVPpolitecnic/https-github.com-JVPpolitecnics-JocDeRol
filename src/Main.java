@@ -223,22 +223,45 @@ panelcollectedObjects = getPanelGridLayout(90, 20, 3);
             }
         });
         timer_enemy.start();
-        panelTop.add(panelcollectedObjects, 0);
+
+        Timer timerRefresh = new Timer(50, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                boolean collision;
+                collision = checkCollision(player1, coin, selectChar);
+                getCoin(coin, collision);
+                panelTop.add(panelGold, 0);
+                checkForCollisionWithcollectable(sword, player1, selectChar);
+                checkForCollisionWithcollectable(potion, player1, selectChar);
+                checkForCollisionWithcollectable(mitra, player1, selectChar);
+                addCollectedObjectsToPanel(player1);
+
+            }
+        });
+                timerRefresh.start();
     }
 private void addCollectedObjectsToPanel(Character char1){
         JLabel itemToPlace= new JLabel();
         ArrayList<String> objArray =char1.getObjects();
     for (int i = 0; i <objArray.toArray().length ; i++) {
         if(objArray.get(i).equals("sword")){
-            itemToPlace = sword;
+            itemToPlace = GameVisuals.getVisual(20, "src/img/dungeon/sword.png");
             System.out.println("true");
+            panelcollectedObjects.add(itemToPlace, 0);
+            panelTop.add(panelcollectedObjects, 0);
         } else if (objArray.get(i).equals("potion")) {
             itemToPlace = potion;
+            GameVisuals.getVisual(20, "src/img/dungeon/potion.png");
             System.out.println("true");
-        } else {
-            itemToPlace = mitra;
+            panelcollectedObjects.add(itemToPlace, 0);
+            panelTop.add(panelcollectedObjects, 0);
+        } else if (objArray.get(i).equals("mitra")){
+            itemToPlace =GameVisuals.getVisual(20, "src/img/dungeon/mitra.png");
+            panelcollectedObjects.add(itemToPlace, 0);
+            panelTop.add(panelcollectedObjects, 0);
         }
         panelcollectedObjects.add(itemToPlace, 0);
+        panelTop.add(panelcollectedObjects, 0);
     }
 
 }
@@ -267,8 +290,6 @@ private void addCollectedObjectsToPanel(Character char1){
             }
             skeletons.get(i).setDirection(direction);
         }
-
-
     }
 
     private void move_monstersX(int x, int i, String direction) {
@@ -383,8 +404,7 @@ private void addCollectedObjectsToPanel(Character char1){
         if (leftpointOfRangeX < labelRight && rightpointOfRangeX > labelLeft &&
                 leftpointOfRangeY < labelBottom && rightpointOfRangeY > labelTop) {
             collision = true;
-            player1.setGoldCoins(player1.getGoldCoins() + 1);
-           // goldCountTxt.setText(player1.getGoldCoins() + " coins");
+
         }
         return collision;
     }
@@ -409,7 +429,8 @@ private void addCollectedObjectsToPanel(Character char1){
 
             f_coin.setLocation(randX, randY);
             panelSecond.add(f_coin, 0);
-
+            player1.setGoldCoins(player1.getGoldCoins() + 1);
+            goldCountTxt.setText(player1.getGoldCoins() + " coins");
 
         }
     }
@@ -531,12 +552,7 @@ private void addCollectedObjectsToPanel(Character char1){
                     player1.setDirection("left");
 
                 }
-                collision = checkCollision(player1, coin, selectChar);
-                getCoin(coin, collision);
-                panelTop.add(panelGold, 0);
-                checkForCollisionWithcollectable(sword, player1, selectChar);
-               /* checkForCollisionWithcollectable(potion, player1, selectChar);
-                checkForCollisionWithcollectable(mitra, player1, selectChar);*/
+
             }
 
             if (key == KeyEvent.VK_RIGHT) {
@@ -548,11 +564,7 @@ private void addCollectedObjectsToPanel(Character char1){
                     selectChar.setIcon(GameVisuals.getIconMovingGIF(characterOption, 100, "RIGHT"));
                     player1.setDirection("right");
                 }
-                collision = checkCollision(player1, coin, selectChar);
-                getCoin(coin, collision);
-                checkForCollisionWithcollectable(sword, player1, selectChar);
-               /* checkForCollisionWithcollectable(potion, player1, selectChar);
-               checkForCollisionWithcollectable(mitra, player1, selectChar);*/
+
             }
             if (key == KeyEvent.VK_UP) {
                 if (y > panelTop.getHeight() + 32)
@@ -562,11 +574,7 @@ private void addCollectedObjectsToPanel(Character char1){
                     selectChar.setIcon(GameVisuals.getIconMovingGIF(characterOption, 100, "UP"));
                     player1.setDirection("up");
                 }
-                collision = checkCollision(player1, coin, selectChar);
-                getCoin(coin, collision);
-              checkForCollisionWithcollectable(sword, player1, selectChar);
-             /*   checkForCollisionWithcollectable(potion, player1, selectChar);
-                checkForCollisionWithcollectable(mitra, player1, selectChar);*/
+
             }
 
             if (key == KeyEvent.VK_DOWN) {
@@ -580,9 +588,7 @@ private void addCollectedObjectsToPanel(Character char1){
                 collision = checkCollision(player1, coin, selectChar);
                 getCoin(coin, collision);
             }
-           checkForCollisionWithcollectable(sword, player1, selectChar);
-           /* checkForCollisionWithcollectable(potion, player1, selectChar);
-            checkForCollisionWithcollectable(mitra, player1, selectChar);*/
+
             selectChar.setLocation(x, y);
             player1.setPositionX(x);
             player1.setPositionY(y);
@@ -612,7 +618,6 @@ private void addCollectedObjectsToPanel(Character char1){
             arrayCollectedObjects.add(item_name);
             char1.setObjects(arrayCollectedObjects);
             collectable.setLocation(1000, 1000);
-            addCollectedObjectsToPanel(char1);
             System.out.println(item_name);
         }
     }
