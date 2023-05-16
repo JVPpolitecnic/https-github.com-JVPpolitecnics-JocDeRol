@@ -228,17 +228,35 @@ panelcollectedObjects = getPanelGridLayout(90, 20, 3);
             @Override
             public void actionPerformed(ActionEvent e) {
                 boolean collision;
-                collision = checkCollision(player1, coin, selectChar);
+                collision = checkCollision(player1, coin, selectChar, 1);
                 getCoin(coin, collision);
                 panelTop.add(panelGold, 0);
-                checkForCollisionWithcollectable(sword, player1, selectChar);
-                checkForCollisionWithcollectable(potion, player1, selectChar);
-                checkForCollisionWithcollectable(mitra, player1, selectChar);
+                checkForCollisionWithcollectable(sword);
+                checkForCollisionWithcollectable(potion);
+                checkForCollisionWithcollectable(mitra);
                 addCollectedObjectsToPanel(player1);
+                checkCollisionEnemy();
+                for (int i = 0; i < arrayCollectedObjects.toArray().length ; i++) {
+                    System.out.println(arrayCollectedObjects.get(i));
+                }
 
             }
         });
                 timerRefresh.start();
+    }
+    private void checkCollisionEnemy(){
+
+        for (int i = 0; i <enemies.toArray().length ; i++) {
+            boolean colision = checkCollision(player1, enemies.get(i), selectChar, 0.35);
+            if (colision){
+                player1.setLives(player1.getLives()-1);
+                player1.setPositionY(50);
+                player1.setPositionX(10);
+                selectChar.setLocation(player1.getPositionX(), player1.getPositionY());
+            }
+        }
+
+
     }
 private void addCollectedObjectsToPanel(Character char1){
         JLabel itemToPlace= new JLabel();
@@ -391,10 +409,10 @@ private void addCollectedObjectsToPanel(Character char1){
         return panelMain;
     }
 
-    private boolean checkCollision(Character p1, JLabel labelToCheck, JLabel charLabel) {
+    private boolean checkCollision(Character p1, JLabel labelToCheck, JLabel charLabel, double sensitivity) {
         int leftpointOfRangeX = p1.getPositionX();
-        int rightpointOfRangeX = p1.getPositionX() + charLabel.getWidth();
-        int rightpointOfRangeY = p1.getPositionY() + charLabel.getHeight();
+        double rightpointOfRangeX = p1.getPositionX() + charLabel.getWidth()*sensitivity;
+        double rightpointOfRangeY = p1.getPositionY() + charLabel.getHeight()*sensitivity;
         int leftpointOfRangeY = p1.getPositionY();
         int labelLeft = labelToCheck.getX();
         int labelRight = labelToCheck.getX() + labelToCheck.getWidth();
@@ -585,7 +603,7 @@ private void addCollectedObjectsToPanel(Character char1){
                 if (!player1.getDirection().equals("down"))
                     selectChar.setIcon(GameVisuals.getIconMovingGIF(characterOption, 100, "DOWN"));
                 player1.setDirection("down");
-                collision = checkCollision(player1, coin, selectChar);
+                collision = checkCollision(player1, coin, selectChar, 1);
                 getCoin(coin, collision);
             }
 
@@ -596,27 +614,28 @@ private void addCollectedObjectsToPanel(Character char1){
         }
     }
 
-    private void checkForCollisionWithcollectable(JLabel collectable, Character char1, JLabel charLabel) {
+    private void checkForCollisionWithcollectable(JLabel collectable) {
         boolean collided;
         String item_name;
-        collided = checkCollision(char1, collectable, charLabel);
+        collided = checkCollision(player1, collectable, selectChar, 1);
 
-        if (collectable.getIcon() == GameVisuals.getVisual(20, "src/img/dungeon/sword.png").getIcon()) {
-            item_name = "sword";
 
-        } else if (collectable.getIcon().equals(GameVisuals.getVisual(20, "src/img/dungeon/potion.png").getIcon())) {
-            item_name = "potion";
-
-        } else if (collectable.getIcon().equals(GameVisuals.getVisual(20, "src/img/dungeon/mitra.png"))) {
-            item_name = "mitra";
-
-        } else {
-            item_name = " ";
-        }
 
         if (collided) {
+            if (collectable.getIcon().equals(GameVisuals.getVisual(20, "src/img/dungeon/sword.png").getIcon())) {
+                item_name = "sword";
+
+            } else if (collectable.getIcon().equals(GameVisuals.getVisual(20, "src/img/dungeon/potion.png").getIcon())) {
+                item_name = "potion";
+
+            } else if (collectable.getIcon().equals(GameVisuals.getVisual(20, "src/img/dungeon/mitra.png").getIcon())) {
+                item_name = "mitra";
+
+            } else {
+                item_name = " ";
+            }
             arrayCollectedObjects.add(item_name);
-            char1.setObjects(arrayCollectedObjects);
+            player1.setObjects(arrayCollectedObjects);
             collectable.setLocation(1000, 1000);
             System.out.println(item_name);
         }
