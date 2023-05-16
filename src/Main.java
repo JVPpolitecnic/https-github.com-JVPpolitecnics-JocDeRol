@@ -11,6 +11,8 @@ public class Main {
     private JPanel panelMain;
     private JPanel panelFirst;
     private JPanel panelSecond;
+
+    private JPanel panelcollectedObjects;
     JTextField textFieldName;
 
     private JButton buttonEnterGame;
@@ -55,6 +57,7 @@ public class Main {
     String name;
 
     public Main() {
+        arrayCollectedObjects = new ArrayList<>();
         directions = new ArrayList<>();
         skeleton = new Skeleton("down");
         // Wall and floor textures
@@ -69,17 +72,20 @@ public class Main {
         // Gold label
         goldCountTxt = new JLabel();
         // panels
+        mitra = new JLabel();
+        potion = new JLabel();
+        sword = new JLabel();
 
 
         panelMain = getPanelMain();
         panelFirst = getPanel();
         panelSecond = getPanel();
         panelTop = getPanelTop();
-
-        playerName = getPanelGridLayout(200, 20);
+panelcollectedObjects = getPanelGridLayout(90, 20, 3);
+        playerName = getPanelGridLayout(200, 20, 2);
         panelFirst.setFocusable(true);
         buttonEnterGame.setLocation(panelFirst.getWidth() / 2 - 60, panelFirst.getWidth() / 2);
-        panelGold = getPanelGridLayout(200, 20);
+        panelGold = getPanelGridLayout(200, 20, 2);
 
         panelMain.add(panelFirst);
         panelMain.addKeyListener(new panelMainListener());
@@ -91,9 +97,11 @@ public class Main {
         panelFirst.add(arrow_left);
         panelFirst.add(arrow_right);
 
-        panelGold = getPanelGridLayout(64, 32);
+
         panelGold.setBackground(Color.WHITE);
         panelGold.setVisible(true);
+
+        panelcollectedObjects.setBackground(Color.WHITE);
 
         panelTop.add(panelGold, 0);
 
@@ -215,8 +223,25 @@ public class Main {
             }
         });
         timer_enemy.start();
+        panelTop.add(panelcollectedObjects, 0);
+    }
+private void addCollectedObjectsToPanel(Character char1){
+        JLabel itemToPlace= new JLabel();
+        ArrayList<String> objArray =char1.getObjects();
+    for (int i = 0; i <objArray.toArray().length ; i++) {
+        if(objArray.get(i).equals("sword")){
+            itemToPlace = sword;
+            System.out.println("true");
+        } else if (objArray.get(i).equals("potion")) {
+            itemToPlace = potion;
+            System.out.println("true");
+        } else {
+            itemToPlace = mitra;
+        }
+        panelcollectedObjects.add(itemToPlace, 0);
     }
 
+}
     private void fillSKeletonObjArray() {
         for (int i = 0; i < enemies.toArray().length; i++) {
             skeletons.add(new Skeleton("down"));
@@ -320,10 +345,10 @@ public class Main {
         return panelTop;
     }
 
-    private JPanel getPanelGridLayout(int width, int height) {
+    private JPanel getPanelGridLayout(int width, int height, int collumns) {
         JPanel panelGridLayout = new JPanel();
         panelGridLayout.setSize(width, height);
-        panelGridLayout.setLayout(new GridLayout(1, 2));
+        panelGridLayout.setLayout(new GridLayout(1, collumns));
 // 200 20
         return panelGridLayout;
     }
@@ -359,7 +384,7 @@ public class Main {
                 leftpointOfRangeY < labelBottom && rightpointOfRangeY > labelTop) {
             collision = true;
             player1.setGoldCoins(player1.getGoldCoins() + 1);
-            goldCountTxt.setText(player1.getGoldCoins() + " coins");
+           // goldCountTxt.setText(player1.getGoldCoins() + " coins");
         }
         return collision;
     }
@@ -489,14 +514,12 @@ public class Main {
     private class panelSecondListener extends KeyAdapter {
         public void keyPressed(KeyEvent e) {
             int x, y;
-            int clicks;
             int speed;
             boolean action, collision;
             x = selectChar.getX();
             y = selectChar.getY();
             speed = player1.getSpeed();
             int key = e.getKeyCode();
-            clicks = 0;
             if (key == KeyEvent.VK_LEFT) {
                 if (x > 32) {
                     x = x - speed;
@@ -511,6 +534,9 @@ public class Main {
                 collision = checkCollision(player1, coin, selectChar);
                 getCoin(coin, collision);
                 panelTop.add(panelGold, 0);
+                checkForCollisionWithcollectable(sword, player1, selectChar);
+               /* checkForCollisionWithcollectable(potion, player1, selectChar);
+                checkForCollisionWithcollectable(mitra, player1, selectChar);*/
             }
 
             if (key == KeyEvent.VK_RIGHT) {
@@ -524,6 +550,9 @@ public class Main {
                 }
                 collision = checkCollision(player1, coin, selectChar);
                 getCoin(coin, collision);
+                checkForCollisionWithcollectable(sword, player1, selectChar);
+               /* checkForCollisionWithcollectable(potion, player1, selectChar);
+               checkForCollisionWithcollectable(mitra, player1, selectChar);*/
             }
             if (key == KeyEvent.VK_UP) {
                 if (y > panelTop.getHeight() + 32)
@@ -535,6 +564,9 @@ public class Main {
                 }
                 collision = checkCollision(player1, coin, selectChar);
                 getCoin(coin, collision);
+              checkForCollisionWithcollectable(sword, player1, selectChar);
+             /*   checkForCollisionWithcollectable(potion, player1, selectChar);
+                checkForCollisionWithcollectable(mitra, player1, selectChar);*/
             }
 
             if (key == KeyEvent.VK_DOWN) {
@@ -548,7 +580,9 @@ public class Main {
                 collision = checkCollision(player1, coin, selectChar);
                 getCoin(coin, collision);
             }
-
+           checkForCollisionWithcollectable(sword, player1, selectChar);
+           /* checkForCollisionWithcollectable(potion, player1, selectChar);
+            checkForCollisionWithcollectable(mitra, player1, selectChar);*/
             selectChar.setLocation(x, y);
             player1.setPositionX(x);
             player1.setPositionY(y);
@@ -560,18 +594,26 @@ public class Main {
         boolean collided;
         String item_name;
         collided = checkCollision(char1, collectable, charLabel);
-        item_name = " ";
+
         if (collectable.getIcon() == GameVisuals.getVisual(20, "src/img/dungeon/sword.png").getIcon()) {
             item_name = "sword";
-        } else if (collectable.getIcon() == GameVisuals.getVisual(20, "src/img/dungeon/potion.png").getIcon()) {
+
+        } else if (collectable.getIcon().equals(GameVisuals.getVisual(20, "src/img/dungeon/potion.png").getIcon())) {
             item_name = "potion";
-        } else if (collectable.getIcon() == GameVisuals.getVisual(20, "src/img/dungeon/mitra.png")) {
+
+        } else if (collectable.getIcon().equals(GameVisuals.getVisual(20, "src/img/dungeon/mitra.png"))) {
             item_name = "mitra";
+
+        } else {
+            item_name = " ";
         }
 
         if (collided) {
             arrayCollectedObjects.add(item_name);
             char1.setObjects(arrayCollectedObjects);
+            collectable.setLocation(1000, 1000);
+            addCollectedObjectsToPanel(char1);
+            System.out.println(item_name);
         }
     }
 
