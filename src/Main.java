@@ -30,7 +30,7 @@ public class Main {
     private JLabel sword;
     private JLabel coin;
     private JLabel potion;
-
+    private ArrayList<JLabel> hearts;
     private JLabel monster;
 
     private ArrayList<Skeleton> skeletons;
@@ -81,7 +81,7 @@ public class Main {
         panelFirst = getPanel();
         panelSecond = getPanel();
         panelTop = getPanelTop();
-panelcollectedObjects = getPanelGridLayout(90, 20, 3);
+        panelcollectedObjects = getPanelGridLayout(90, 20, 3);
         playerName = getPanelGridLayout(200, 20, 2);
         panelFirst.setFocusable(true);
         buttonEnterGame.setLocation(panelFirst.getWidth() / 2 - 60, panelFirst.getWidth() / 2);
@@ -123,21 +123,21 @@ panelcollectedObjects = getPanelGridLayout(90, 20, 3);
         //Visuals
 
 
-        heart = GameVisuals.heart(true);
+       /* heart = GameVisuals.heart(true);
         heart2 = GameVisuals.heart(true);
         heart3 = GameVisuals.heart(true);
         heart4 = GameVisuals.heart(true);
-        heart5 = GameVisuals.heart(true);
-        panelTop.add(heart);
+        heart5 = GameVisuals.heart(true);*/
+        //panelTop.add(heart);
 
 
         GameVisuals.placeTiles(panelFirst);
         GameVisuals.placeTiles(panelSecond);
         GameVisuals.placeWall(panelSecond, panelTop);
-        panelTop.add(heart2);
+        //panelTop.add(heart2);
         panelFirst.add(buttonEnterGame, 0);
 
-        panelTop.add(heart3);
+        //panelTop.add(heart3);
         characterOption = 0;
         selectChar = GameVisuals.getCharachter(characterOption, 100);
         selectChar.setLocation(panelFirst.getWidth() / 2 - 65, panelFirst.getHeight() / 2 - 80);
@@ -236,20 +236,32 @@ panelcollectedObjects = getPanelGridLayout(90, 20, 3);
                 checkForCollisionWithcollectable(mitra);
                 addCollectedObjectsToPanel(player1);
                 checkCollisionEnemy();
-                for (int i = 0; i < arrayCollectedObjects.toArray().length ; i++) {
+                //fillArrayHearts();
+                for (int i = 0; i < arrayCollectedObjects.toArray().length; i++) {
                     System.out.println(arrayCollectedObjects.get(i));
                 }
 
             }
         });
-                timerRefresh.start();
+        timerRefresh.start();
     }
-    private void checkCollisionEnemy(){
 
-        for (int i = 0; i <enemies.toArray().length ; i++) {
+    private void fillArrayHearts() {
+        for (int i = 0; i < player1.getLives(); i++) {
+            hearts.add(GameVisuals.heart(true));
+            if (player1.getLives() != hearts.toArray().length){
+                panelTop.add(hearts.get(i));
+            }
+        }
+
+    }
+
+    private void checkCollisionEnemy() {
+
+        for (int i = 0; i < enemies.toArray().length; i++) {
             boolean colision = checkCollision(player1, enemies.get(i), selectChar, 0.35);
-            if (colision){
-                player1.setLives(player1.getLives()-1);
+            if (colision) {
+                player1.setLives(player1.getLives() - 1);
                 player1.setPositionY(50);
                 player1.setPositionX(10);
                 selectChar.setLocation(player1.getPositionX(), player1.getPositionY());
@@ -258,31 +270,33 @@ panelcollectedObjects = getPanelGridLayout(90, 20, 3);
 
 
     }
-private void addCollectedObjectsToPanel(Character char1){
-        JLabel itemToPlace= new JLabel();
-        ArrayList<String> objArray =char1.getObjects();
-    for (int i = 0; i <objArray.toArray().length ; i++) {
-        if(objArray.get(i).equals("sword")){
-            itemToPlace = GameVisuals.getVisual(20, "src/img/dungeon/sword.png");
-            System.out.println("true");
-            panelcollectedObjects.add(itemToPlace, 0);
-            panelTop.add(panelcollectedObjects, 0);
-        } else if (objArray.get(i).equals("potion")) {
-            itemToPlace = potion;
-            GameVisuals.getVisual(20, "src/img/dungeon/potion.png");
-            System.out.println("true");
-            panelcollectedObjects.add(itemToPlace, 0);
-            panelTop.add(panelcollectedObjects, 0);
-        } else if (objArray.get(i).equals("mitra")){
-            itemToPlace =GameVisuals.getVisual(20, "src/img/dungeon/mitra.png");
+
+    private void addCollectedObjectsToPanel(Character char1) {
+        JLabel itemToPlace = new JLabel();
+        ArrayList<String> objArray = char1.getObjects();
+        for (int i = 0; i < objArray.toArray().length; i++) {
+            if (objArray.get(i).equals("sword")) {
+                itemToPlace = GameVisuals.getVisual(20, "src/img/dungeon/sword.png");
+                System.out.println("true");
+                panelcollectedObjects.add(itemToPlace, 0);
+                panelTop.add(panelcollectedObjects, 0);
+            } else if (objArray.get(i).equals("potion")) {
+                itemToPlace = potion;
+                GameVisuals.getVisual(20, "src/img/dungeon/potion.png");
+                System.out.println("true");
+                panelcollectedObjects.add(itemToPlace, 0);
+                panelTop.add(panelcollectedObjects, 0);
+            } else if (objArray.get(i).equals("mitra")) {
+                itemToPlace = GameVisuals.getVisual(20, "src/img/dungeon/mitra.png");
+                panelcollectedObjects.add(itemToPlace, 0);
+                panelTop.add(panelcollectedObjects, 0);
+            }
             panelcollectedObjects.add(itemToPlace, 0);
             panelTop.add(panelcollectedObjects, 0);
         }
-        panelcollectedObjects.add(itemToPlace, 0);
-        panelTop.add(panelcollectedObjects, 0);
+
     }
 
-}
     private void fillSKeletonObjArray() {
         for (int i = 0; i < enemies.toArray().length; i++) {
             skeletons.add(new Skeleton("down"));
@@ -411,8 +425,8 @@ private void addCollectedObjectsToPanel(Character char1){
 
     private boolean checkCollision(Character p1, JLabel labelToCheck, JLabel charLabel, double sensitivity) {
         int leftpointOfRangeX = p1.getPositionX();
-        double rightpointOfRangeX = p1.getPositionX() + charLabel.getWidth()*sensitivity;
-        double rightpointOfRangeY = p1.getPositionY() + charLabel.getHeight()*sensitivity;
+        double rightpointOfRangeX = p1.getPositionX() + charLabel.getWidth() * sensitivity;
+        double rightpointOfRangeY = p1.getPositionY() + charLabel.getHeight() * sensitivity;
         int leftpointOfRangeY = p1.getPositionY();
         int labelLeft = labelToCheck.getX();
         int labelRight = labelToCheck.getX() + labelToCheck.getWidth();
@@ -618,7 +632,6 @@ private void addCollectedObjectsToPanel(Character char1){
         boolean collided;
         String item_name;
         collided = checkCollision(player1, collectable, selectChar, 1);
-
 
 
         if (collided) {
