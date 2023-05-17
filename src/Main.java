@@ -17,14 +17,9 @@ public class Main {
 
     private JButton buttonEnterGame;
     private JPanel panelTop;
-    private Timer enemyTimer;
-    private JLabel heart;
-    private JLabel heart2;
-    private JLabel heart3;
-
-    private JLabel heart4;
-
-    private JLabel heart5;
+    private Timer timer_enemy;
+    private Timer timerRefresh;
+private Timer timer_checkHearts;
     private JLabel selectChar;
 
     private JLabel sword;
@@ -56,6 +51,8 @@ public class Main {
     private Skeleton skeleton;
     String name;
 
+    int c;
+
     public Main() {
         arrayCollectedObjects = new ArrayList<>();
         directions = new ArrayList<>();
@@ -76,12 +73,13 @@ public class Main {
         potion = new JLabel();
         sword = new JLabel();
 
+        hearts = new ArrayList<>();
 
         panelMain = getPanelMain();
         panelFirst = getPanel();
         panelSecond = getPanel();
         panelTop = getPanelTop();
-        panelcollectedObjects = getPanelGridLayout(90, 20, 3);
+        panelcollectedObjects = getPanelGridLayout(100, 30, 3);
         playerName = getPanelGridLayout(200, 20, 2);
         panelFirst.setFocusable(true);
         buttonEnterGame.setLocation(panelFirst.getWidth() / 2 - 60, panelFirst.getWidth() / 2);
@@ -123,21 +121,16 @@ public class Main {
         //Visuals
 
 
-       /* heart = GameVisuals.heart(true);
-        heart2 = GameVisuals.heart(true);
-        heart3 = GameVisuals.heart(true);
-        heart4 = GameVisuals.heart(true);
-        heart5 = GameVisuals.heart(true);*/
-        //panelTop.add(heart);
+
 
 
         GameVisuals.placeTiles(panelFirst);
         GameVisuals.placeTiles(panelSecond);
         GameVisuals.placeWall(panelSecond, panelTop);
-        //panelTop.add(heart2);
+
         panelFirst.add(buttonEnterGame, 0);
 
-        //panelTop.add(heart3);
+
         characterOption = 0;
         selectChar = GameVisuals.getCharachter(characterOption, 100);
         selectChar.setLocation(panelFirst.getWidth() / 2 - 65, panelFirst.getHeight() / 2 - 80);
@@ -157,12 +150,20 @@ public class Main {
         potion = GameVisuals.getVisual(20, "src/img/dungeon/potion.png");
         potion.setLocation(panelSecond.getWidth() / 3, panelSecond.getHeight() / 2);
         panelSecond.add(potion, 0);
-
+        fillArrayHearts();
         enemies = new ArrayList<>();
         fillMonsterArrayJLabel("src/img/skeleton/skeleton_down.gif");
         skeletons = new ArrayList<>();
+
         fillSKeletonObjArray();
         randomDirections();
+         timer_checkHearts = new Timer(50, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        timer_checkHearts.start();
         Timer timer_rand_directions = new Timer(100000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -170,7 +171,7 @@ public class Main {
             }
         });
         timer_rand_directions.start();
-        Timer timer_enemy = new Timer(50, new ActionListener() {
+         timer_enemy = new Timer(50, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
@@ -224,7 +225,7 @@ public class Main {
         });
         timer_enemy.start();
 
-        Timer timerRefresh = new Timer(50, new ActionListener() {
+         timerRefresh = new Timer(50, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 boolean collision;
@@ -236,7 +237,7 @@ public class Main {
                 checkForCollisionWithcollectable(mitra);
                 addCollectedObjectsToPanel(player1);
                 checkCollisionEnemy();
-                //fillArrayHearts();
+
                 for (int i = 0; i < arrayCollectedObjects.toArray().length; i++) {
                     System.out.println(arrayCollectedObjects.get(i));
                 }
@@ -245,17 +246,29 @@ public class Main {
         });
         timerRefresh.start();
     }
-
+private void gameOver(){
+        if (player1.getLives() <= 0) {
+        timer_enemy.stop();
+timerRefresh.stop();
+timer_checkHearts.stop();
+        }
+}
     private void fillArrayHearts() {
         for (int i = 0; i < player1.getLives(); i++) {
             hearts.add(GameVisuals.heart(true));
-            if (player1.getLives() != hearts.toArray().length){
-                panelTop.add(hearts.get(i));
-            }
+
+
         }
-
+        for (int i = 0; i < hearts.toArray().length ; i++) {
+            panelTop.add(hearts.get(i), 0);
+        }
     }
+private void removeHeart(){
 
+    c = player1.getLives();
+        hearts.get(c).setIcon(GameVisuals.heart(false).getIcon());
+
+}
     private void checkCollisionEnemy() {
 
         for (int i = 0; i < enemies.toArray().length; i++) {
@@ -265,6 +278,7 @@ public class Main {
                 player1.setPositionY(50);
                 player1.setPositionX(10);
                 selectChar.setLocation(player1.getPositionX(), player1.getPositionY());
+                removeHeart();
             }
         }
 
