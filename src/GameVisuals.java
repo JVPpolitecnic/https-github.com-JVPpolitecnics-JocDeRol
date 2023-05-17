@@ -33,7 +33,7 @@ public class GameVisuals {
     }
 public static JLabel heart(boolean full_heart){
     JLabel heart = new JLabel();
-        heart.setSize(30,30);
+        heart.setSize(20,20);
     ImageIcon image_full_heart = new ImageIcon("src/img/heart_full.png");
     Icon icon_full_heart = new ImageIcon(image_full_heart.getImage().getScaledInstance(heart.getWidth(), heart.getHeight(), Image.SCALE_DEFAULT));
     ImageIcon image_empty_heart = new ImageIcon("src/img/heart_empty.png");

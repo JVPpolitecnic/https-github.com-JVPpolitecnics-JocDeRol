@@ -237,7 +237,7 @@ private Timer timer_checkHearts;
                 checkForCollisionWithcollectable(mitra);
                 addCollectedObjectsToPanel(player1);
                 checkCollisionEnemy();
-
+checkGameOver();
                 for (int i = 0; i < arrayCollectedObjects.toArray().length; i++) {
                     System.out.println(arrayCollectedObjects.get(i));
                 }
@@ -246,11 +246,12 @@ private Timer timer_checkHearts;
         });
         timerRefresh.start();
     }
-private void gameOver(){
+private void checkGameOver(){
         if (player1.getLives() <= 0) {
         timer_enemy.stop();
 timerRefresh.stop();
 timer_checkHearts.stop();
+            JOptionPane.showMessageDialog(null, "Game Over");
         }
 }
     private void fillArrayHearts() {
