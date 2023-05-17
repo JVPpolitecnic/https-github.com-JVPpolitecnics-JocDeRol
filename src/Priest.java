@@ -7,4 +7,12 @@ public class Priest extends Character {
         super(name, lives, goldCoins, speed, direction, objects, positionX, positionY);
         this.charachterType = "priest";
     }
+
+    public String getCharachterType() {
+        return charachterType;
+    }
+
+    public void setCharachterType(String charachterType) {
+        this.charachterType = charachterType;
+    }
 }

@@ -7,4 +7,12 @@ public class Warrior extends Character {
         super(name, lives, goldCoins, speed, direction, objects, positionX, positionY);
         this.charachterType = "warrior";
     }
+
+    public String getCharachterType() {
+        return charachterType;
+    }
+
+    public void setCharachterType(String charachterType) {
+        this.charachterType = charachterType;
+    }
 }

@@ -85,4 +85,18 @@ public class Character {
     public void setPositionY(int positionY) {
         this.positionY = positionY;
     }
+
+    @Override
+    public String toString() {
+        return "Character{" +
+                "name='" + name + '\'' +
+                ", lives=" + lives +
+                ", goldCoins=" + goldCoins +
+                ", speed=" + speed +
+                ", direction='" + direction + '\'' +
+                ", objects=" + objects +
+                ", positionX=" + positionX +
+                ", positionY=" + positionY +
+                '}';
+    }
 }

@@ -4,6 +4,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.TimerTask;
 
@@ -153,6 +158,7 @@ buttonEnterGame.addActionListener(new start());
         fillMonsterArrayJLabel("src/img/skeleton/skeleton_down.gif");
         skeletons = new ArrayList<>();
 
+
         fillSKeletonObjArray();
         randomDirections();
         timer_checkHearts = new Timer(50, new ActionListener() {
@@ -241,12 +247,23 @@ buttonEnterGame.addActionListener(new start());
         });
         timerRefresh.start();
     }
+private void writeFile(){
+        String info = player1.toString();
+    Path filepath = Paths.get("src/resources/scores.txt");
+        try {
+Files.writeString(filepath, info);
+Files.writeString(filepath, System.lineSeparator(), StandardOpenOption.APPEND);
+        }catch (Exception e) {
+            System.out.println("error whilst saving your score");
+        }
 
+}
     private void checkWinGame() {
         if (player1.getGoldCoins() >= 25) {
             timer_enemy.stop();
             timerRefresh.stop();
             timer_checkHearts.stop();
+            writeFile();
             JOptionPane.showMessageDialog(null, "You won!");
         }
     }
@@ -256,6 +273,7 @@ buttonEnterGame.addActionListener(new start());
             timer_enemy.stop();
             timerRefresh.stop();
             timer_checkHearts.stop();
+            writeFile();
             JOptionPane.showMessageDialog(null, "Game Over");
         }
     }
@@ -283,6 +301,8 @@ buttonEnterGame.addActionListener(new start());
         for (int i = 0; i < enemies.toArray().length; i++) {
             boolean colision = checkCollision(player1, enemies.get(i), selectChar, 0.35);
             if (colision) {
+
+
                 player1.setLives(player1.getLives() - 1);
                 player1.setPositionY(50);
                 player1.setPositionX(10);
@@ -560,7 +580,7 @@ playGame();
             }
         }
     }
-private void playGame(){
+private void playGame() {
     panelFirst.setVisible(false);
     panelMain.add(panelTop);
     panelMain.add(panelSecond);
