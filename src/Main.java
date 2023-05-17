@@ -19,7 +19,7 @@ public class Main {
     private JPanel panelTop;
     private Timer timer_enemy;
     private Timer timerRefresh;
-private Timer timer_checkHearts;
+    private Timer timer_checkHearts;
     private JLabel selectChar;
 
     private JLabel sword;
@@ -64,7 +64,7 @@ private Timer timer_checkHearts;
         buttonEnterGame.setText("Enter game");
         buttonEnterGame.setLayout(null);
         buttonEnterGame.setSize(new Dimension(100, 35));
-
+buttonEnterGame.addActionListener(new start());
 
         // Gold label
         goldCountTxt = new JLabel();
@@ -116,12 +116,10 @@ private Timer timer_checkHearts;
         enterName.setText("Enter");
         playerName.setLocation(panelMain.getWidth() / 2 + 250, panelMain.getWidth() / 2 + 290);
         enterName.addActionListener(new nameEntered());
+
         playerName.add(enterName);
         enterName.setFocusable(true);
         //Visuals
-
-
-
 
 
         GameVisuals.placeTiles(panelFirst);
@@ -157,7 +155,7 @@ private Timer timer_checkHearts;
 
         fillSKeletonObjArray();
         randomDirections();
-         timer_checkHearts = new Timer(50, new ActionListener() {
+        timer_checkHearts = new Timer(50, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
@@ -171,7 +169,7 @@ private Timer timer_checkHearts;
             }
         });
         timer_rand_directions.start();
-         timer_enemy = new Timer(50, new ActionListener() {
+        timer_enemy = new Timer(50, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
@@ -225,51 +223,61 @@ private Timer timer_checkHearts;
         });
         timer_enemy.start();
 
-         timerRefresh = new Timer(50, new ActionListener() {
+        timerRefresh = new Timer(50, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 boolean collision;
                 collision = checkCollision(player1, coin, selectChar, 1);
                 getCoin(coin, collision);
                 panelTop.add(panelGold, 0);
-                checkForCollisionWithcollectable(sword);
-                checkForCollisionWithcollectable(potion);
-                checkForCollisionWithcollectable(mitra);
-                addCollectedObjectsToPanel(player1);
-                checkCollisionEnemy();
-checkGameOver();
-                for (int i = 0; i < arrayCollectedObjects.toArray().length; i++) {
-                    System.out.println(arrayCollectedObjects.get(i));
-                }
+                checkForCollisionWithcollectable(sword, 1);
+                checkForCollisionWithcollectable(potion, 2);
+                checkForCollisionWithcollectable(mitra, 3);
 
+                checkCollisionEnemy();
+                checkGameOver();
+                checkWinGame();
             }
         });
         timerRefresh.start();
     }
-private void checkGameOver(){
+
+    private void checkWinGame() {
+        if (player1.getGoldCoins() >= 25) {
+            timer_enemy.stop();
+            timerRefresh.stop();
+            timer_checkHearts.stop();
+            JOptionPane.showMessageDialog(null, "You won!");
+        }
+    }
+
+    private void checkGameOver() {
         if (player1.getLives() <= 0) {
-        timer_enemy.stop();
-timerRefresh.stop();
-timer_checkHearts.stop();
+            timer_enemy.stop();
+            timerRefresh.stop();
+            timer_checkHearts.stop();
             JOptionPane.showMessageDialog(null, "Game Over");
         }
-}
+    }
+
     private void fillArrayHearts() {
         for (int i = 0; i < player1.getLives(); i++) {
             hearts.add(GameVisuals.heart(true));
 
 
         }
-        for (int i = 0; i < hearts.toArray().length ; i++) {
+        for (int i = 0; i < hearts.toArray().length; i++) {
             panelTop.add(hearts.get(i), 0);
         }
     }
-private void removeHeart(){
 
-    c = player1.getLives();
+    private void removeHeart() {
+
+        c = player1.getLives();
         hearts.get(c).setIcon(GameVisuals.heart(false).getIcon());
 
-}
+    }
+
     private void checkCollisionEnemy() {
 
         for (int i = 0; i < enemies.toArray().length; i++) {
@@ -286,31 +294,35 @@ private void removeHeart(){
 
     }
 
-    private void addCollectedObjectsToPanel(Character char1) {
+    private void addCollectedObjectsToPanel(int index) {
         JLabel itemToPlace = new JLabel();
-        ArrayList<String> objArray = char1.getObjects();
-        for (int i = 0; i < objArray.toArray().length; i++) {
-            if (objArray.get(i).equals("sword")) {
-                itemToPlace = GameVisuals.getVisual(20, "src/img/dungeon/sword.png");
-                System.out.println("true");
-                panelcollectedObjects.add(itemToPlace, 0);
-                panelTop.add(panelcollectedObjects, 0);
-            } else if (objArray.get(i).equals("potion")) {
-                itemToPlace = potion;
-                GameVisuals.getVisual(20, "src/img/dungeon/potion.png");
-                System.out.println("true");
-                panelcollectedObjects.add(itemToPlace, 0);
-                panelTop.add(panelcollectedObjects, 0);
-            } else if (objArray.get(i).equals("mitra")) {
-                itemToPlace = GameVisuals.getVisual(20, "src/img/dungeon/mitra.png");
-                panelcollectedObjects.add(itemToPlace, 0);
-                panelTop.add(panelcollectedObjects, 0);
-            }
+        if (index == 1) {
+            itemToPlace = GameVisuals.getVisual(20, "src/img/dungeon/sword.png");
+            System.out.println("true");
             panelcollectedObjects.add(itemToPlace, 0);
             panelTop.add(panelcollectedObjects, 0);
-        }
+            panelMain.add(panelTop);
 
+        } else if (index == 2) {
+            itemToPlace = potion;
+            GameVisuals.getVisual(20, "src/img/dungeon/potion.png");
+            System.out.println("true");
+            panelcollectedObjects.add(itemToPlace, 0);
+            panelTop.add(panelcollectedObjects, 0);
+
+        } else if (index == 3) {
+            itemToPlace = GameVisuals.getVisual(20, "src/img/dungeon/mitra.png");
+            panelcollectedObjects.add(itemToPlace, 0);
+            panelTop.add(panelcollectedObjects, 0);
+            panelMain.add(panelTop);
+
+        }
+        panelTop.revalidate();
+        panelTop.repaint();
+        panelcollectedObjects.add(itemToPlace, 0);
+        panelTop.add(panelcollectedObjects, 0);
     }
+
 
     private void fillSKeletonObjArray() {
         for (int i = 0; i < enemies.toArray().length; i++) {
@@ -491,12 +503,23 @@ private void removeHeart(){
         frame.setLayout(null);
         frame.setLocation(300, 200);
     }
+    private class start implements ActionListener {
 
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            playGame();
+            name = textFieldName.getText();
+            System.out.println(name);
+        }
+    }
     private class nameEntered implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             name = textFieldName.getText();
             System.out.println(name);
+            panelFirst.requestFocus();
+            panelMain.requestFocus();
+
         }
     }
 
@@ -531,26 +554,28 @@ private void removeHeart(){
                 changeArrow("right");
             }
             if (key == KeyEvent.VK_ENTER) {
-                panelFirst.setVisible(false);
-                panelMain.add(panelTop);
-                panelMain.add(panelSecond);
-                //selectChar.setSize(50, 50);
-                panelSecond.add(selectChar, 0);
-                panelMain.setFocusable(false);
-                panelSecond.addKeyListener(new panelSecondListener());
 
-                System.out.println(name);
-                getCoin(coin, true);
-                goldCountTxt.setText(player1.getGoldCoins() + " coins");
-                panelGold.add(coin, 0);
-                panelGold.add(goldCountTxt, 0);
-                panelSecond.add(coin, 0);
-
+playGame();
 
             }
         }
     }
+private void playGame(){
+    panelFirst.setVisible(false);
+    panelMain.add(panelTop);
+    panelMain.add(panelSecond);
+    //selectChar.setSize(50, 50);
+    panelSecond.add(selectChar, 0);
+    panelMain.setFocusable(false);
+    panelSecond.addKeyListener(new panelSecondListener());
 
+    System.out.println(name);
+    getCoin(coin, true);
+    goldCountTxt.setText(player1.getGoldCoins() + " coins");
+    panelGold.add(coin, 0);
+    panelGold.add(goldCountTxt, 0);
+    panelSecond.add(coin, 0);
+}
     private void changeArrow(String direction) {
 
         TimerTask task = null;
@@ -643,29 +668,30 @@ private void removeHeart(){
         }
     }
 
-    private void checkForCollisionWithcollectable(JLabel collectable) {
+    private void checkForCollisionWithcollectable(JLabel collectable, int item) {
         boolean collided;
         String item_name;
         collided = checkCollision(player1, collectable, selectChar, 1);
 
 
         if (collided) {
-            if (collectable.getIcon().equals(GameVisuals.getVisual(20, "src/img/dungeon/sword.png").getIcon())) {
+            if (item == 1) {
                 item_name = "sword";
 
-            } else if (collectable.getIcon().equals(GameVisuals.getVisual(20, "src/img/dungeon/potion.png").getIcon())) {
+            } else if (item == 2) {
                 item_name = "potion";
 
-            } else if (collectable.getIcon().equals(GameVisuals.getVisual(20, "src/img/dungeon/mitra.png").getIcon())) {
+            } else if (item == 3) {
                 item_name = "mitra";
 
             } else {
-                item_name = " ";
+                item_name = "sword";
             }
             arrayCollectedObjects.add(item_name);
             player1.setObjects(arrayCollectedObjects);
             collectable.setLocation(1000, 1000);
             System.out.println(item_name);
+            addCollectedObjectsToPanel(item);
         }
     }
 
