@@ -17,10 +17,14 @@ public class Main {
     private JPanel panelFirst;
     private JPanel panelSecond;
 
+    private JPanel panelRanking;
+
     private JPanel panelcollectedObjects;
     JTextField textFieldName;
 
     private JButton buttonEnterGame;
+
+    private JButton buttonRanking;
     private JPanel panelTop;
     private Timer timer_enemy;
     private Timer timerRefresh;
@@ -41,6 +45,7 @@ public class Main {
     private JButton enterName;
     private JLabel title;
     private JLabel arrow_left;
+    private JLabel rankingText;
     private JLabel arrow_right;
     private JLabel mitra;
 
@@ -69,25 +74,31 @@ public class Main {
         buttonEnterGame.setText("Enter game");
         buttonEnterGame.setLayout(null);
         buttonEnterGame.setSize(new Dimension(100, 35));
-buttonEnterGame.addActionListener(new start());
+        buttonEnterGame.addActionListener(new start());
 
+        buttonRanking = new JButton();
+        buttonRanking.setText("Ranking");
+        buttonRanking.setLayout(null);
+        buttonRanking.setSize(new Dimension(100, 35));
+        buttonRanking.addActionListener(new viewRanking());
         // Gold label
         goldCountTxt = new JLabel();
         // panels
         mitra = new JLabel();
         potion = new JLabel();
         sword = new JLabel();
-
+        rankingText = new JLabel();
         hearts = new ArrayList<>();
 
         panelMain = getPanelMain();
         panelFirst = getPanel();
+        panelRanking = getPanel();
         panelSecond = getPanel();
         panelTop = getPanelTop();
         panelcollectedObjects = getPanelGridLayout(100, 30, 3);
         playerName = getPanelGridLayout(200, 20, 2);
         panelFirst.setFocusable(true);
-        buttonEnterGame.setLocation(panelFirst.getWidth() / 2 - 60, panelFirst.getWidth() / 2);
+        buttonEnterGame.setLocation(panelFirst.getWidth() / 2 - 120, panelFirst.getWidth() / 2);
         panelGold = getPanelGridLayout(200, 20, 2);
 
         panelMain.add(panelFirst);
@@ -130,8 +141,9 @@ buttonEnterGame.addActionListener(new start());
         GameVisuals.placeTiles(panelFirst);
         GameVisuals.placeTiles(panelSecond);
         GameVisuals.placeWall(panelSecond, panelTop);
-
+        buttonRanking.setLocation(panelFirst.getWidth() / 2 + 30, panelFirst.getWidth() / 2);
         panelFirst.add(buttonEnterGame, 0);
+        panelFirst.add(buttonRanking, 0);
 
 
         characterOption = 0;
@@ -247,17 +259,19 @@ buttonEnterGame.addActionListener(new start());
         });
         timerRefresh.start();
     }
-private void writeFile(){
+
+    private void writeFile() {
         String info = player1.toString();
-    Path filepath = Paths.get("src/resources/scores.txt");
+        Path filepath = Paths.get("src/resources/scores.txt");
         try {
-Files.writeString(filepath, info);
-Files.writeString(filepath, System.lineSeparator(), StandardOpenOption.APPEND);
-        }catch (Exception e) {
+            Files.writeString(filepath, info);
+            Files.writeString(filepath, System.lineSeparator(), StandardOpenOption.APPEND);
+        } catch (Exception e) {
             System.out.println("error whilst saving your score");
         }
 
-}
+    }
+
     private void checkWinGame() {
         if (player1.getGoldCoins() >= 25) {
             timer_enemy.stop();
@@ -368,6 +382,16 @@ Files.writeString(filepath, System.lineSeparator(), StandardOpenOption.APPEND);
                 direction = "right";
             }
             skeletons.get(i).setDirection(direction);
+        }
+    }
+
+    private void getScores() {
+        Path path = Paths.get("src/resources/scores.txt");
+        try {
+            List<String> liniesFitxer = Files.readAllLines(path);
+            panelRanking.add(liniesFitxer);
+        } catch (IOException e) {
+            System.out.println("error");
         }
     }
 
@@ -523,6 +547,7 @@ Files.writeString(filepath, System.lineSeparator(), StandardOpenOption.APPEND);
         frame.setLayout(null);
         frame.setLocation(300, 200);
     }
+
     private class start implements ActionListener {
 
         @Override
@@ -532,6 +557,15 @@ Files.writeString(filepath, System.lineSeparator(), StandardOpenOption.APPEND);
             System.out.println(name);
         }
     }
+
+    private class viewRanking implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            panelFirst.setVisible(false);
+            panelMain.add(panelRanking, 0);
+        }
+    }
+
     private class nameEntered implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -575,27 +609,29 @@ Files.writeString(filepath, System.lineSeparator(), StandardOpenOption.APPEND);
             }
             if (key == KeyEvent.VK_ENTER) {
 
-playGame();
+                playGame();
 
             }
         }
     }
-private void playGame() {
-    panelFirst.setVisible(false);
-    panelMain.add(panelTop);
-    panelMain.add(panelSecond);
-    //selectChar.setSize(50, 50);
-    panelSecond.add(selectChar, 0);
-    panelMain.setFocusable(false);
-    panelSecond.addKeyListener(new panelSecondListener());
 
-    System.out.println(name);
-    getCoin(coin, true);
-    goldCountTxt.setText(player1.getGoldCoins() + " coins");
-    panelGold.add(coin, 0);
-    panelGold.add(goldCountTxt, 0);
-    panelSecond.add(coin, 0);
-}
+    private void playGame() {
+        panelFirst.setVisible(false);
+        panelMain.add(panelTop);
+        panelMain.add(panelSecond);
+        //selectChar.setSize(50, 50);
+        panelSecond.add(selectChar, 0);
+        panelMain.setFocusable(false);
+        panelSecond.addKeyListener(new panelSecondListener());
+
+        System.out.println(name);
+        getCoin(coin, true);
+        goldCountTxt.setText(player1.getGoldCoins() + " coins");
+        panelGold.add(coin, 0);
+        panelGold.add(goldCountTxt, 0);
+        panelSecond.add(coin, 0);
+    }
+
     private void changeArrow(String direction) {
 
         TimerTask task = null;

@@ -1,1 +1,1 @@
-Character{name='null', lives=0, goldCoins=21, speed=5, direction='down', objects=[sword], positionX=10, positionY=50}
+Character{name='null', lives=10, goldCoins=25, speed=5, direction='down', objects=[sword, potion], positionX=382, positionY=320}
