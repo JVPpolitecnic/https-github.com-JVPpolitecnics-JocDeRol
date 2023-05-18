@@ -1,16 +1,20 @@
 import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.TimerTask;
+import java.util.*;
+import java.util.List;
+
 
 public class Main {
     private JPanel panelMain;
@@ -21,6 +25,8 @@ public class Main {
 
     private JPanel panelcollectedObjects;
     JTextField textFieldName;
+    
+    private ArrayList<String> scoresArrayList;
 
     private JButton buttonEnterGame;
 
@@ -156,6 +162,8 @@ public class Main {
         coin = GameVisuals.getVisual(20, "src/img/dungeon/dollar.png");
         player1 = initializeCharacheter(characterOption);
 
+
+
         panelTop.add(panelGold, 0);
 
         sword = GameVisuals.getVisual(20, "src/img/dungeon/sword.png");
@@ -173,6 +181,7 @@ public class Main {
 
         fillSKeletonObjArray();
         randomDirections();
+        scoresArrayList = new ArrayList<>();
         timer_checkHearts = new Timer(50, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -264,8 +273,7 @@ public class Main {
         String info = player1.toString();
         Path filepath = Paths.get("src/resources/scores.txt");
         try {
-            Files.writeString(filepath, info);
-            Files.writeString(filepath, System.lineSeparator(), StandardOpenOption.APPEND);
+            Files.writeString(filepath, info +System.lineSeparator() , StandardOpenOption.APPEND);
         } catch (Exception e) {
             System.out.println("error whilst saving your score");
         }
@@ -277,8 +285,9 @@ public class Main {
             timer_enemy.stop();
             timerRefresh.stop();
             timer_checkHearts.stop();
-            writeFile();
             JOptionPane.showMessageDialog(null, "You won!");
+            writeFile();
+            getScores();
         }
     }
 
@@ -289,6 +298,8 @@ public class Main {
             timer_checkHearts.stop();
             writeFile();
             JOptionPane.showMessageDialog(null, "Game Over");
+            writeFile();
+            getScores();
         }
     }
 
@@ -386,13 +397,36 @@ public class Main {
     }
 
     private void getScores() {
-        Path path = Paths.get("src/resources/scores.txt");
-        try {
-            List<String> liniesFitxer = Files.readAllLines(path);
-            panelRanking.add(liniesFitxer);
-        } catch (IOException e) {
-            System.out.println("error");
+            panelRanking.setLayout(null);
+        JLabel text = new JLabel();
+
+        text.setSize(new Dimension(panelMain.getWidth(), 200));
+        String fileName = "src/resources/scores.txt";
+        
+     
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                // process the line.
+               
+                scoresArrayList.add(line);
+                
+                
+            }
+            for (String scores: scoresArrayList) {
+                text.setText(text.getText() + " \n " + scores);
+
+            }
+            //text.setText("Capullo");
+
+            text.setLocation(0, 0);
+            panelRanking.add(text, 0);
+            panelRanking.revalidate();
+            panelRanking.repaint();
+        } catch (Exception e){
+            System.out.println("Scores not found");
         }
+
     }
 
     private void move_monstersX(int x, int i, String direction) {
@@ -446,20 +480,21 @@ public class Main {
     }
 
     private Character initializeCharacheter(int f_charOpt) {
-        Character selectedPlayer;
+
 
         switch (characterOption) {
             case 0:
-                selectedPlayer = new Wizard(name, 10, 20, 5, "down", arrayCollectedObjects, 20, 20, "wizzard");
-                break;
+                Wizard wizard = new Wizard(name, 10, 20, 5, "down", arrayCollectedObjects, 20, 20, "wizzard");
+                return wizard;
             case 1:
-                selectedPlayer = new Warrior(name, 5, 10, 10, "down", arrayCollectedObjects, 20, 20, "warrior");
-                break;
-            default:
-                selectedPlayer = new Priest(name, 5, 50, 3, "down", arrayCollectedObjects, 20, 20, "priest");
-        }
+                Warrior warrior = new Warrior(name, 5, 10, 10, "down", arrayCollectedObjects, 20, 20, "warrior");
+                return warrior;
 
-        return selectedPlayer;
+            default:
+                Priest priest = new Priest(name, 5, 50, 3, "down", arrayCollectedObjects, 20, 20, "priest");
+                return priest;
+
+        }
     }
 
     private JPanel getPanelTop() {
@@ -562,7 +597,10 @@ public class Main {
         @Override
         public void actionPerformed(ActionEvent e) {
             panelFirst.setVisible(false);
+            getScores();
+            panelRanking.setBackground(Color.RED);
             panelMain.add(panelRanking, 0);
+
         }
     }
 
@@ -599,6 +637,7 @@ public class Main {
             if (key == KeyEvent.VK_RIGHT) {
                 if (characterOption != 2) {
                     characterOption = characterOption + 1;
+
                 }
                 selectChar.setVisible(false);
                 System.out.println(characterOption);
@@ -606,9 +645,10 @@ public class Main {
                 selectChar.setLocation(panelFirst.getWidth() / 2 - 65, panelFirst.getHeight() / 2 - 80);
                 panelFirst.add(selectChar, 0);
                 changeArrow("right");
+
             }
             if (key == KeyEvent.VK_ENTER) {
-
+                player1 = initializeCharacheter(characterOption);
                 playGame();
 
             }
