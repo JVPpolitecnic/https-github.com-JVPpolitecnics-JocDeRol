@@ -273,7 +273,8 @@ public class Main {
         String info = player1.toString();
         Path filepath = Paths.get("src/resources/scores.txt");
         try {
-            Files.writeString(filepath, info +System.lineSeparator() , StandardOpenOption.APPEND);
+            Files.writeString(filepath, info, StandardOpenOption.APPEND);
+            Files.writeString(filepath, System.lineSeparator(), StandardOpenOption.APPEND);
         } catch (Exception e) {
             System.out.println("error whilst saving your score");
         }
@@ -296,7 +297,6 @@ public class Main {
             timer_enemy.stop();
             timerRefresh.stop();
             timer_checkHearts.stop();
-            writeFile();
             JOptionPane.showMessageDialog(null, "Game Over");
             writeFile();
             getScores();
@@ -395,12 +395,16 @@ public class Main {
             skeletons.get(i).setDirection(direction);
         }
     }
+private void organiseFIlesbyGold(){
 
+
+
+}
     private void getScores() {
-            panelRanking.setLayout(null);
-        JLabel text = new JLabel();
 
-        text.setSize(new Dimension(panelMain.getWidth(), 200));
+int y = 0;
+
+
         String fileName = "src/resources/scores.txt";
         
      
@@ -408,21 +412,22 @@ public class Main {
             String line;
             while ((line = br.readLine()) != null) {
                 // process the line.
-               
+                JLabel text = new JLabel();
+                text.setSize(new Dimension(panelMain.getWidth(), 200));
                 scoresArrayList.add(line);
-                
-                
-            }
-            for (String scores: scoresArrayList) {
-                text.setText(text.getText() + " \n " + scores);
+                text.setText(line);
+                panelRanking.setLayout(null);
+                text.setLocation(80, y);
+                y+=20;
+                panelRanking.add(text, 0);
+                /*panelRanking.revalidate();
+                panelRanking.repaint();*/
 
             }
+
             //text.setText("Capullo");
 
-            text.setLocation(0, 0);
-            panelRanking.add(text, 0);
-            panelRanking.revalidate();
-            panelRanking.repaint();
+
         } catch (Exception e){
             System.out.println("Scores not found");
         }
@@ -590,6 +595,7 @@ public class Main {
             playGame();
             name = textFieldName.getText();
             System.out.println(name);
+            player1.setName(name);
         }
     }
 
@@ -608,6 +614,7 @@ public class Main {
         @Override
         public void actionPerformed(ActionEvent e) {
             name = textFieldName.getText();
+            player1.setName(name);
             System.out.println(name);
             panelFirst.requestFocus();
             panelMain.requestFocus();

@@ -1,9 +1,2 @@
 
-Character{name='null', lives=0, goldCoins=22, speed=5, direction='down', objects=[sword], positionX=10, positionY=50}
-Character{name='null', lives=0, goldCoins=22, speed=5, direction='down', objects=[sword], positionX=10, positionY=50}
-Character{name='null', lives=0, goldCoins=22, speed=5, direction='down', objects=[sword, potion], positionX=10, positionY=50}
-Character{name='null', lives=0, goldCoins=22, speed=5, direction='down', objects=[sword, potion], positionX=10, positionY=50}
-Character{name='null', lives=0, goldCoins=23, speed=5, direction='down', objects=[sword], positionX=10, positionY=50}
-Character{name='null', lives=0, goldCoins=23, speed=5, direction='down', objects=[sword], positionX=10, positionY=50}
-Character{name='null', lives=0, goldCoins=21, speed=5, direction='down', objects=[sword], positionX=10, positionY=50}
-Character{name='null', lives=0, goldCoins=21, speed=5, direction='down', objects=[sword], positionX=10, positionY=50}
+Score -->Name:Player1', Lives:0,Gold coins:21,Collected objects:[sword]

@@ -88,15 +88,10 @@ public class Character {
 
     @Override
     public String toString() {
-        return "Character{" +
-                "name='" + name + '\'' +
-                ", lives=" + lives +
-                ", goldCoins=" + goldCoins +
-                ", speed=" + speed +
-                ", direction='" + direction + '\'' +
-                ", objects=" + objects +
-                ", positionX=" + positionX +
-                ", positionY=" + positionY +
-                '}';
+        return "Score -->" +
+                "Name:" + name + '\'' +
+                ", Lives:" + lives +
+                ",Gold coins:" + goldCoins +
+                ",Collected objects:" + objects ;
     }
 }
