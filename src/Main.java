@@ -25,7 +25,7 @@ public class Main {
 
     private JPanel panelcollectedObjects;
     JTextField textFieldName;
-    
+
     private ArrayList<String> scoresArrayList;
 
     private JButton buttonEnterGame;
@@ -161,7 +161,6 @@ public class Main {
         panelSecond.setFocusable(true);
         coin = GameVisuals.getVisual(20, "src/img/dungeon/dollar.png");
         player1 = initializeCharacheter(characterOption);
-
 
 
         panelTop.add(panelGold, 0);
@@ -327,12 +326,32 @@ public class Main {
             boolean colision = checkCollision(player1, enemies.get(i), selectChar, 0.35);
             if (colision) {
 
+                if (player1 instanceof Wizard && player1.getObjects().contains("potion")) {
+                    enemies.get(i).setVisible(false);
+                    enemies.remove(i);
+                    player1.getObjects().remove("potion");
+                    panelTop.revalidate();
+                    panelTop.repaint();
+                } else if (player1 instanceof Warrior && player1.getObjects().contains("sword")) {
+                    enemies.get(i).setVisible(false);
+                    enemies.remove(i);
+                    player1.getObjects().remove("sword");
+                    panelTop.revalidate();
+                    panelTop.repaint();
+                } else if (player1 instanceof Priest && player1.getObjects().contains("mitra")) {
+                    enemies.get(i).setVisible(false);
+                    enemies.remove(i);
+                    player1.getObjects().remove("mitra");
+                    panelTop.revalidate();
+                    panelTop.repaint();
+                } else {
+                    player1.setLives(player1.getLives() - 1);
+                    player1.setPositionY(50);
+                    player1.setPositionX(10);
+                    selectChar.setLocation(player1.getPositionX(), player1.getPositionY());
+                    removeHeart();
+                }
 
-                player1.setLives(player1.getLives() - 1);
-                player1.setPositionY(50);
-                player1.setPositionX(10);
-                selectChar.setLocation(player1.getPositionX(), player1.getPositionY());
-                removeHeart();
             }
         }
 
@@ -395,17 +414,19 @@ public class Main {
             skeletons.get(i).setDirection(direction);
         }
     }
-private void organiseFilesbyGold(){
 
-}
+    private void organiseFilesbyGold() {
+
+    }
+
     private void getScores() {
 
-int y = 0;
+        int y = 0;
 
 
         String fileName = "src/resources/scores.txt";
-        
-     
+
+
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -416,7 +437,7 @@ int y = 0;
                 text.setText(line);
                 panelRanking.setLayout(null);
                 text.setLocation(80, y);
-                y+=20;
+                y += 20;
                 panelRanking.add(text, 0);
                 /*panelRanking.revalidate();
                 panelRanking.repaint();*/
@@ -426,7 +447,7 @@ int y = 0;
             //text.setText("Capullo");
 
 
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Scores not found");
         }
 

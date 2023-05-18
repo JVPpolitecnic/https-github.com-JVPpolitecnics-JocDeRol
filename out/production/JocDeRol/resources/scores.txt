@@ -1,3 +1,5 @@
 
 
 Score -->Name:null',Lives:0,Gold coins:21,Collected objects:[sword]
+Score -->Name:null',Lives:0,Gold coins:12,Collected objects:[sword, potion]
+Score -->Name:null',Lives:0,Gold coins:22,Collected objects:[sword]
