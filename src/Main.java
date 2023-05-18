@@ -395,9 +395,7 @@ public class Main {
             skeletons.get(i).setDirection(direction);
         }
     }
-private void organiseFIlesbyGold(){
-
-
+private void organiseFilesbyGold(){
 
 }
     private void getScores() {

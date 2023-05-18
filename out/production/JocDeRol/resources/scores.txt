@@ -1,1 +1,3 @@
 
+
+Score -->Name:null',Lives:0,Gold coins:21,Collected objects:[sword]

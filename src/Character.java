@@ -90,7 +90,7 @@ public class Character {
     public String toString() {
         return "Score -->" +
                 "Name:" + name + '\'' +
-                ", Lives:" + lives +
+                ",Lives:" + lives +
                 ",Gold coins:" + goldCoins +
                 ",Collected objects:" + objects ;
     }
