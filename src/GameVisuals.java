@@ -108,7 +108,7 @@ return selectChar;
 
     }
 } else if (direction.toUpperCase().equals("UP")) {
-        ImageIcon imageWizard = new ImageIcon("src/img/priest/priest_up.gif");
+        ImageIcon imageWizard = new ImageIcon("src/img/wizard/wizard_up.gif");
         Icon icon_wizard = new ImageIcon(imageWizard.getImage().getScaledInstance(selectChar.getWidth(), selectChar.getHeight(), Image.SCALE_DEFAULT));
 
         ImageIcon imageWarrior = new ImageIcon("src/img/warrior/warrior_up.gif");
@@ -129,7 +129,7 @@ return selectChar;
         }
 
     } else if (direction.toUpperCase().equals("DOWN")) {
-        ImageIcon imageWizard = new ImageIcon("src/img/priest/priest_down.gif");
+        ImageIcon imageWizard = new ImageIcon("src/img/wizard/wizard_down.gif");
         Icon icon_wizard = new ImageIcon(imageWizard.getImage().getScaledInstance(selectChar.getWidth(), selectChar.getHeight(), Image.SCALE_DEFAULT));
 
         ImageIcon imageWarrior = new ImageIcon("src/img/warrior/warrior_down.gif");
@@ -149,7 +149,7 @@ return selectChar;
 
         }
     }else if (direction.toUpperCase().equals("RIGHT")) {
-        ImageIcon imageWizard = new ImageIcon("src/img/priest/priest_right.gif");
+        ImageIcon imageWizard = new ImageIcon("src/img/priest/wizard_right.gif");
         Icon icon_wizard = new ImageIcon(imageWizard.getImage().getScaledInstance(selectChar.getWidth(), selectChar.getHeight(), Image.SCALE_DEFAULT));
 
         ImageIcon imageWarrior = new ImageIcon("src/img/warrior/warrior_right.gif");

@@ -508,11 +508,12 @@ public class Main {
 
         switch (characterOption) {
             case 0:
-                Wizard wizard = new Wizard(name, 10, 20, 5, "down", arrayCollectedObjects, 20, 20, "wizzard");
-                return wizard;
-            case 1:
                 Warrior warrior = new Warrior(name, 5, 10, 10, "down", arrayCollectedObjects, 20, 20, "warrior");
                 return warrior;
+
+            case 1:
+                Wizard wizard = new Wizard(name, 10, 20, 5, "down", arrayCollectedObjects, 20, 20, "wizzard");
+                return wizard;
 
             default:
                 Priest priest = new Priest(name, 5, 50, 3, "down", arrayCollectedObjects, 20, 20, "priest");
