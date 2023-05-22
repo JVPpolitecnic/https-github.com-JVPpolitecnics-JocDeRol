@@ -1,0 +1,12 @@
+drop database if exists juego_de_rol;
+create database juego_de_rol;
+
+use juego_de_rol;
+
+create table if not exists ranking (
+id int auto_increment,
+name varchar(120),
+lives int,
+gold_coins int,
+primary key (id)
+);

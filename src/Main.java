@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.sql.*;
 import java.util.*;
 import java.util.List;
 
@@ -288,6 +289,7 @@ public class Main {
             JOptionPane.showMessageDialog(null, "You won!");
             writeFile();
             getScores();
+            addDataToDB(player1.getName(), player1.getLives(), player1.getGoldCoins());
         }
     }
 
@@ -299,6 +301,7 @@ public class Main {
             JOptionPane.showMessageDialog(null, "Game Over");
             writeFile();
             getScores();
+            addDataToDB(player1.getName(), player1.getLives(), player1.getGoldCoins());
         }
     }
 
@@ -353,6 +356,25 @@ public class Main {
                 }
 
             }
+        }
+
+
+    }
+    private void addDataToDB(String name, int lives, int goldCoins){
+        String db_url = "jdbc:mysql://localhost:3306/juego_de_rol";
+        String user = "root";
+        String passwd= null;
+        String insertQy = "insert into actor values (?, ?, ?)";
+
+        try{
+            Connection con = DriverManager.getConnection(db_url, user, null);
+            PreparedStatement ps = con.prepareStatement(insertQy);
+
+            ps.setString( 1,name);
+            ps.setInt(2, lives);
+            ps.setInt(3, goldCoins);
+      } catch (SQLException e) {
+            System.out.println("Error writing in DB");
         }
 
 
