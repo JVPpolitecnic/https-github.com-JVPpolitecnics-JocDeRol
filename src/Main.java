@@ -362,19 +362,27 @@ public class Main {
     }
     private void addDataToDB(String name, int lives, int goldCoins){
         String db_url = "jdbc:mysql://localhost:3306/juego_de_rol";
-        String user = "root";
-        String passwd= null;
-        String insertQy = "insert into actor values (?, ?, ?)";
+        String user = "juego";
+        String passwd= "juego1";
+        String insertQy = "insert into ranking (name, lives, gold_coins) values (?, ?, ?)";
 
         try{
-            Connection con = DriverManager.getConnection(db_url, user, null);
+            Connection con = DriverManager.getConnection(db_url, user, passwd);
             PreparedStatement ps = con.prepareStatement(insertQy);
 
             ps.setString( 1,name);
             ps.setInt(2, lives);
             ps.setInt(3, goldCoins);
-      } catch (SQLException e) {
+            int addrows = ps.executeUpdate();
+            if (addrows>0){
+                System.out.println("The database has been recorded");
+            }
+            ps.close();
+            con.close();
+      } catch (Exception e) {
             System.out.println("Error writing in DB");
+            e.printStackTrace();
+            System.out.println(e.getStackTrace());
         }
 
 
